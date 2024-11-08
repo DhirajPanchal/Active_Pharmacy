@@ -1,0 +1,11 @@
+server:
+  port: 8021
+
+spring:
+  application:
+    name: store-inventory
+  r2dbc:
+    url: "r2dbc:mysql://localhost:3306/active_pharmacy_v01"
+    username: root
+    password: Test12345
+
