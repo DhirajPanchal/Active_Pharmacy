@@ -10,12 +10,12 @@ import java.util.List;
 @NoArgsConstructor
 public class ListResponse<E> {
 
-    private List<E> list;
+    private List<E> content;
 
     private Long count;
 
-    public ListResponse(List<E> list, Long count) {
-        this.list = list;
+    public ListResponse(List<E> content, Long count) {
+        this.content = content;
         this.count = count;
     }
 }

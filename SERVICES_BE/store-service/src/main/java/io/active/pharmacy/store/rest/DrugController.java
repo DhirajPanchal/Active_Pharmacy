@@ -1,7 +1,6 @@
 package io.active.pharmacy.store.rest;
 
 
-import io.active.pharmacy.store.dto.DrugDTO;
 import io.active.pharmacy.store.dto.ListRequest;
 import io.active.pharmacy.store.dto.ListResponse;
 import io.active.pharmacy.store.entity.Drug;
@@ -22,6 +21,7 @@ import static io.active.pharmacy.store.constant.RestConstants.*;
 
 @CrossOrigin(
         origins = {
+                "http://localhost:8000",
                 "http://localhost:5173"
         },
         methods = {
@@ -52,10 +52,10 @@ public class DrugController {
     }
 
 
-    @PostMapping("/list")
+    @PostMapping("/list-mono")
     public ResponseEntity<Mono<Page<Drug>>> listEntity(@RequestParam(name = PAGE_INDEX, defaultValue = PAGE_INDEX_DEFAULT) int index,
-                                                    @RequestParam(name = PAGE_SIZE, defaultValue = PAGE_SIZE_DEFAULT) int size,
-                                                    @RequestBody(required = false) ListRequest requestBody) {
+                                                       @RequestParam(name = PAGE_SIZE, defaultValue = PAGE_SIZE_DEFAULT) int size,
+                                                       @RequestBody(required = false) ListRequest requestBody) {
         System.out.println(" ______ CategoryRestController . POST - LIST " + requestBody);
         if (requestBody == null) {
             requestBody = defaultListRequest;
@@ -69,10 +69,10 @@ public class DrugController {
     }
 
 
-    @PostMapping("/list2")
+    @PostMapping("/list")
     public ResponseEntity<Mono<ListResponse<Drug>>> list(@RequestParam(name = PAGE_INDEX, defaultValue = PAGE_INDEX_DEFAULT) int index,
-                                                          @RequestParam(name = PAGE_SIZE, defaultValue = PAGE_SIZE_DEFAULT) int size,
-                                                          @RequestBody(required = false) ListRequest requestBody) {
+                                                         @RequestParam(name = PAGE_SIZE, defaultValue = PAGE_SIZE_DEFAULT) int size,
+                                                         @RequestBody(required = false) ListRequest requestBody) {
         System.out.println(" ______ CategoryRestController . POST - LIST " + requestBody);
         if (requestBody == null) {
             requestBody = defaultListRequest;

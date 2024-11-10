@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&family=Lato:wght@400;700&display=swap");
+
+body {
+  font-family: "Lato", serif;
+  letter-spacing: 1px;
+}
+
+.active-data-grid{
+  border: 0px solid lightgrey;
+  border-radius: 4px;
+  padding: 8px;
+} 
+
+.active-data-grid-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  padding: 0 8px 8px 0;
+  gap: 8px;
+}
+
+.active-data-grid-footer {
+  display: flex;
+  justify-content: end;
+  padding: 8px 0px 0px 0;
+  gap: 8px;
+}
+
