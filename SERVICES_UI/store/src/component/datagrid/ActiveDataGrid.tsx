@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useState } from "react";
+import React, { PropsWithChildren, useReducer, useState } from "react";
 import {
   DataGridPro,
   GridColDef,
@@ -27,6 +27,17 @@ type ActiveDataGridProps = {
   onRowSelection?: (entityId: number) => void | undefined;
 };
 
+function reducer(state: any, action: any) {
+  switch (action.type) {
+    case "changed_draft": {
+      return {
+        // draft: action.nextDraft,
+        // todos: state.todos,
+      };
+    }
+  }
+}
+
 export default function ActiveDataGrid({
   columns,
   listResponse,
@@ -35,7 +46,10 @@ export default function ActiveDataGrid({
   console.log(" < ActiveDataGrid > ");
 
   const ODD_OPACITY = 0.2;
+
   const [payload, setPayload] = useState<ListPayload>(DEFAULT_LIST_PAYLOAD);
+
+  const [_payload, dispatch] = useReducer(reducer, DEFAULT_LIST_PAYLOAD);
 
   const handleRowClick = (model: GridRowSelectionModel) => {
     console.log("_ADG - Row Selection :", model);
@@ -43,8 +57,8 @@ export default function ActiveDataGrid({
 
   const refresh = (localPayload: ListPayload) => {
     // console.log(" < ActiveDataGrid > PAYLOAD ****************************");
-    console.log("A::", payload.sort);
-    console.log("B::", localPayload.sort);
+    console.log("OLD : ", payload.sort);
+    console.log("NEW : ", localPayload.sort);
     if (props.triggerRefresh) {
       props.triggerRefresh(localPayload);
     }
@@ -140,15 +154,11 @@ export default function ActiveDataGrid({
     let list: GridSortItem[] = [];
     if (payload && payload.sort) {
       const sortObj = payload.sort;
-      // console.log(Object.keys(sortObj));
       const sortKeys = Object.keys(sortObj);
       sortKeys.map((key) => {
-        // console.log(` ${key} === ${sortObj[key]} `);
         list.push({ field: key, sort: sortObj[key] as GridSortDirection });
       });
     }
-    // console.log("------------------------------------");
-    // console.log(list);
     return list;
   };
 
@@ -178,9 +188,6 @@ export default function ActiveDataGrid({
               page: payload.ui_only.index,
             },
           },
-          // sorting: {
-          //   sortModel: [{ field: "drug_label_name", sort: "asc" }],
-          // },
         }}
         pagination={true}
         paginationModel={{
@@ -210,11 +217,11 @@ export default function ActiveDataGrid({
           checked={payload.onlyActive}
           sx={{ paddingLeft: 2 }}
         />
-        <ActiveButton outline rounded onClick={handleReload}>
+        <ActiveButton outline rounded secondary onClick={handleReload}>
           <MdRefresh /> Refresh
         </ActiveButton>
-        <ActiveButton outline rounded onClick={handleClear}>
-          <MdClear /> Clear
+        <ActiveButton outline rounded warning onClick={handleClear}>
+          <MdClear /> Clear All Filter...
         </ActiveButton>
       </div>
     </div>

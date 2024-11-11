@@ -11,4 +11,6 @@ public interface DrugRepository extends ReactiveCrudRepository<Drug, Long> {
 
     Flux<Drug> findAllBy(Pageable pageable);
 
+    Flux<Drug> findAllByAndActive(boolean active, Pageable pageable);
+
 }

@@ -37,11 +37,17 @@ public class DrugService {
         System.out.println(sort);
         Pageable pageable = PageRequest.of(index, size, sort);
 
-        return this.repository.findAllBy(pageable)
-                .collectList()
-                .zipWith(this.repository.count())
-                .map(p -> new ListResponse<>(p.getT1(), p.getT2()));
-
+        if (Boolean.TRUE.equals(requestBody.isOnlyActive())) {
+            return this.repository.findAllByAndActive(true, pageable)
+                    .collectList()
+                    .zipWith(this.repository.count())
+                    .map(p -> new ListResponse<>(p.getT1(), p.getT2()));
+        } else {
+            return this.repository.findAllBy(pageable)
+                    .collectList()
+                    .zipWith(this.repository.count())
+                    .map(p -> new ListResponse<>(p.getT1(), p.getT2()));
+        }
 
     }
 
@@ -63,9 +69,6 @@ public class DrugService {
                 .map(p -> new PageImpl<>(p.getT1(), pageable, p.getT2()));
 
     }
-
-
-
 
 
     //  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
