@@ -1,38 +1,59 @@
 import { GridColDef } from "@mui/x-data-grid-pro";
-import { dateValueGetter } from "../util/utils";
+import { dateValueGetter, containsOnlyOperator } from "../util/utils";
 import { Option } from "../control/ActiveDropdown";
 
 export const DRUGLIST_COLUMNS: GridColDef[] = [
-  { field: "id", headerName: "ID", type: "string", width: 80 },
+  {
+    field: "id",
+    headerName: "ID",
+    type: "string",
+    width: 80,
+    filterable: false,
+  },
   {
     field: "drug_label_name",
     headerName: "Drug Label Name",
     type: "string",
     width: 320,
+    filterOperators: containsOnlyOperator,
   },
   {
     field: "category_id",
     headerName: "Category Id",
     type: "string",
     width: 80,
+    filterable: false,
   },
   {
     field: "category_name",
     headerName: "Category Name",
     type: "string",
     width: 160,
+    filterOperators: containsOnlyOperator,
   },
-  { field: "class_id", headerName: "Class Id", type: "string", width: 80 },
-  { field: "class_name", headerName: "Class Name", type: "string", width: 160 },
+  {
+    field: "class_id",
+    headerName: "Class Id",
+    type: "string",
+    width: 80,
+    filterable: false,
+  },
+  {
+    field: "class_name",
+    headerName: "Class Name",
+    type: "string",
+    width: 160,
+    filterOperators: containsOnlyOperator,
+  },
   { field: "active", headerName: "Active", type: "boolean", width: 80 },
-  // { field: "deleted", headerName: "Deleted", type: "boolean", width: 80 },
+  // { field: "deleted", headerName: "Deleted", type: "boolean", width: 80,    filterable:false },
   {
     field: "updatedOn",
     headerName: "Last Updated On",
     width: 160,
     type: "string",
-    filterable: false,
     valueGetter: dateValueGetter,
+    filterable: false,
   },
   // {
   //   field: "createdOn",

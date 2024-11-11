@@ -1,3 +1,5 @@
+import { getGridStringOperators } from "@mui/x-data-grid-pro";
+
 const localDateTimeFormatter = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString() + "  " + date.toLocaleTimeString();
@@ -11,3 +13,7 @@ const localDateTimeFormatter = (dateString: string): string => {
     }
     return dateStr;
   };
+
+  export const containsOnlyOperator = getGridStringOperators().filter((op) =>
+    ["contains"].includes(op.value)
+  );

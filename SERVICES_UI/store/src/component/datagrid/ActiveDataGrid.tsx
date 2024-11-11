@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useReducer, useState } from "react";
+import React, { PropsWithChildren, useReducer } from "react";
 import {
   DataGridPro,
   GridColDef,
@@ -8,11 +8,13 @@ import {
   GridSortModel,
   gridClasses,
   GridSortDirection,
+  GridFilterItem,
 } from "@mui/x-data-grid-pro";
 import { alpha, styled } from "@mui/material/styles";
 import { MdRefresh, MdClear } from "react-icons/md";
 import {
   DEFAULT_LIST_PAYLOAD,
+  FilterItem,
   ListPayload,
   ListResponse,
   SortObject,
@@ -37,28 +39,15 @@ export default function ActiveDataGrid({
 
   const ODD_OPACITY = 0.2;
 
-  const [payload, setPayload] = useState<ListPayload>(DEFAULT_LIST_PAYLOAD);
-
   const [_payload, dispatch] = useReducer(reducer, DEFAULT_LIST_PAYLOAD);
 
   const handleRowClick = (model: GridRowSelectionModel) => {
     console.log("_ADG - Row Selection :", model);
   };
 
-  const refresh = (localPayload: ListPayload) => {
-    // console.log(" < ActiveDataGrid > PAYLOAD ****************************");
-    console.log("OLD : ", payload.sort);
-    console.log("NEW : ", localPayload.sort);
-    if (triggerRefresh) {
-      triggerRefresh(localPayload);
-    }
-
-    setPayload(localPayload);
-  };
-
   function reducer(state: any, action: any) {
     console.log(" CHANGE ", action);
-    console.log(state);
+    // console.log(state);
 
     let cache: any;
     switch (action.type) {
@@ -82,8 +71,33 @@ export default function ActiveDataGrid({
         };
         break;
       }
+      case PAGINATION: {
+        cache = {
+          ...state,
+          ui_only: {
+            ...state.ui_only,
+            index: action.model.page,
+            size: action.model.pageSize,
+          },
+        };
+        break;
+      }
+      case SORT: {
+        cache = {
+          ...state,
+          sort: action.sortObj,
+        };
+        break;
+      }
+      case FILTER: {
+        cache = {
+          ...state,
+          filter: action.list,
+        };
+        break;
+      }
     }
-    console.log("Payload Changed ", cache);
+    // console.log("Payload Changed ", cache);
     if (cache && triggerRefresh) {
       triggerRefresh(cache);
       return cache;
@@ -93,8 +107,6 @@ export default function ActiveDataGrid({
   }
 
   function handleSort(model: GridSortModel) {
-    console.log("_ADG - Sort ");
-    console.log(model);
     if (model && model.length > 0) {
       let sortObj: SortObject = {};
 
@@ -105,37 +117,81 @@ export default function ActiveDataGrid({
         sortObj = { ...sortObj, [sortfield]: sortOrder };
       });
 
-      const localPayload: ListPayload = {
-        ...payload,
-        sort: sortObj,
-      };
-
-      // console.log(localPayload);
-
-      refresh(localPayload);
+      dispatch({ type: SORT, sortObj });
     }
   }
+
+  const deriveSortModel = (payload: ListPayload): GridSortItem[] => {
+    let list: GridSortItem[] = [];
+    if (payload && payload.sort) {
+      const sortObj = payload.sort;
+      const sortKeys = Object.keys(sortObj);
+      sortKeys.map((key) => {
+        list.push({ field: key, sort: sortObj[key] as GridSortDirection });
+      });
+    }
+    return list;
+  };
+
+  const deriveFilterModel = (payload: ListPayload): GridFilterModel => {
+    let list: GridFilterItem[] = [];
+    if (payload && payload.filter && payload.filter.length > 0) {
+      payload.filter.map((fi) => list.push(fi));
+    }
+    console.log("FIs : ", list);
+    //GridFilterModel
+    return { items: list };
+  };
+
   function handleFilter(model: GridFilterModel) {
-    console.log("_ADG - Filter :", model);
+    // console.log("_ADG - Filter :", model);
+    console.log(
+      "--------------------------------------------------------------------------"
+    );
+
+    if (model && model.items) {
+      let list: FilterItem[] = [];
+      if (model.items.length > 0) {
+        model.items.map((item) => {
+          console.log(item);
+
+          if (item && item.field && item.operator && item.value) {
+          list.push({
+            field: item.field,
+            operator: item.operator,
+            value: item.value,
+          });
+          }
+        });
+      }
+      // console.log("LIST  ", list);
+      // console.log("STATE ", _payload.filter);
+      // if (list.length !== _payload.filter.length) {
+      //   console.log(">>>");
+      //   dispatch({ type: FILTER, list });
+      // }
+      const l1 = [...list];
+      const l2 = [..._payload.filter];
+      console.log(l1);
+      console.log(l2);
+
+      const l3 = l1.filter(
+        (a: FilterItem) =>
+          !l2.some(
+            (b: FilterItem) =>
+              a.field === b.field &&
+              a.operator === b.operator &&
+              a.value === b.value
+          )
+      );
+      console.log(l3);
+      if (l3.length > 0 || l1.length !== l2.length) {
+        console.log(">>>");
+        dispatch({ type: FILTER, list });
+      }
+    }
   }
 
-  function handleModelPagination(model: any) {
-    console.log("_ADG - Pagination :", model);
-    const localPayload: ListPayload = {
-      ...payload,
-      ui_only: { ...payload.ui_only, index: model.page, size: model.pageSize },
-    };
-    refresh(localPayload);
-  }
-  const handleReload = () => {
-    console.log("_ADG - Reload ");
-    refresh(payload);
-  };
-  const handleClear = () => {
-    console.log("_ADG - Clear ");
-    const localPayload: ListPayload = { ...payload, ...DEFAULT_LIST_PAYLOAD };
-    refresh(localPayload);
-  };
   const StripedDataGrid = styled(DataGridPro)(({ theme }) => ({
     [`& .${gridClasses.row}.even`]: {
       backgroundColor: theme.palette.grey[200],
@@ -169,18 +225,6 @@ export default function ActiveDataGrid({
     },
   }));
 
-  const deriveSortModel = (payload: ListPayload): GridSortItem[] => {
-    let list: GridSortItem[] = [];
-    if (payload && payload.sort) {
-      const sortObj = payload.sort;
-      const sortKeys = Object.keys(sortObj);
-      sortKeys.map((key) => {
-        list.push({ field: key, sort: sortObj[key] as GridSortDirection });
-      });
-    }
-    return list;
-  };
-
   return (
     <div className="active-data-grid">
       {/* H E A D E R */}
@@ -204,23 +248,27 @@ export default function ActiveDataGrid({
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: payload.ui_only.size,
-              page: payload.ui_only.index,
+              pageSize: _payload.ui_only.size,
+              page: _payload.ui_only.index,
             },
           },
         }}
         pagination={true}
         paginationModel={{
-          page: payload.ui_only.index,
-          pageSize: payload.ui_only.size,
+          page: _payload.ui_only.index,
+          pageSize: _payload.ui_only.size,
         }}
         pageSizeOptions={[10, 20, 50]}
         paginationMode="server"
-        onPaginationModelChange={(model) => handleModelPagination(model)}
+        onPaginationModelChange={(model) =>
+          dispatch({ type: PAGINATION, model })
+        }
         sortingMode="server"
-        sortModel={deriveSortModel(payload)}
+        sortModel={deriveSortModel(_payload)}
         onSortModelChange={(model) => handleSort(model)}
         filterMode="server"
+        filterDebounceMs={5000}
+        filterModel={deriveFilterModel(_payload)}
         onFilterModelChange={(model) => handleFilter(model)}
         onRowSelectionModelChange={(model) => handleRowClick(model)}
       />
@@ -231,7 +279,7 @@ export default function ActiveDataGrid({
         <FormControlLabel
           control={<Switch />}
           label="Active only"
-          onChange={(event, checked) => {
+          onChange={(_event, checked) => {
             dispatch({ type: ACTIVE_ONLY, checked });
           }}
           checked={_payload.onlyActive}

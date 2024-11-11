@@ -1,9 +1,10 @@
 export type SortObject = { [key: string]: string };
-export type FilterObject = { [key: string]: string };
+
+export type FilterItem = { field: string; operator: string; value?: string };
 
 export interface ListPayload {
   sort?: SortObject;
-  filter?: FilterObject;
+  filter?: FilterItem[];
   onlyActive: boolean;
   ui_only: {
     index: number;
@@ -12,7 +13,7 @@ export interface ListPayload {
 }
 
 export const DEFAULT_LIST_PAYLOAD: ListPayload = {
-  filter: {},
+  filter: [{ field: "category_name", operator: "contains", value: "A" }, { field: "class_name", operator: "contains", value: "B" }],
   sort: { id: "asc" },
   onlyActive: false,
   ui_only: {
@@ -23,6 +24,5 @@ export const DEFAULT_LIST_PAYLOAD: ListPayload = {
 
 export interface ListResponse<T> {
   content: T[];
-
   count: number;
 }
