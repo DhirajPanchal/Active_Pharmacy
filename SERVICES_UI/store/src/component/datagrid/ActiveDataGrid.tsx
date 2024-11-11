@@ -23,24 +23,14 @@ import { FormControlLabel, Switch } from "@mui/material";
 type ActiveDataGridProps = {
   columns: GridColDef[];
   listResponse: ListResponse<any>;
-  triggerRefresh?: (payload: any) => void;
+  triggerRefresh: (payload: any) => void;
   onRowSelection?: (entityId: number) => void | undefined;
 };
-
-function reducer(state: any, action: any) {
-  switch (action.type) {
-    case "changed_draft": {
-      return {
-        // draft: action.nextDraft,
-        // todos: state.todos,
-      };
-    }
-  }
-}
 
 export default function ActiveDataGrid({
   columns,
   listResponse,
+  triggerRefresh,
   ...props
 }: PropsWithChildren<ActiveDataGridProps>) {
   console.log(" < ActiveDataGrid > ");
@@ -59,11 +49,48 @@ export default function ActiveDataGrid({
     // console.log(" < ActiveDataGrid > PAYLOAD ****************************");
     console.log("OLD : ", payload.sort);
     console.log("NEW : ", localPayload.sort);
-    if (props.triggerRefresh) {
-      props.triggerRefresh(localPayload);
+    if (triggerRefresh) {
+      triggerRefresh(localPayload);
     }
+
     setPayload(localPayload);
   };
+
+  function reducer(state: any, action: any) {
+    console.log(" CHANGE ", action);
+    console.log(state);
+
+    let cache: any;
+    switch (action.type) {
+      case REFRESH: {
+        cache = {
+          ...state,
+        };
+        break;
+      }
+      case CLEAR_ALL_FILTERS: {
+        cache = {
+          ...state,
+          ...DEFAULT_LIST_PAYLOAD,
+        };
+        break;
+      }
+      case ACTIVE_ONLY: {
+        cache = {
+          ...state,
+          onlyActive: action.checked,
+        };
+        break;
+      }
+    }
+    console.log("Payload Changed ", cache);
+    if (cache && triggerRefresh) {
+      triggerRefresh(cache);
+      return cache;
+    } else {
+      return state;
+    }
+  }
 
   function handleSort(model: GridSortModel) {
     console.log("_ADG - Sort ");
@@ -100,14 +127,6 @@ export default function ActiveDataGrid({
     };
     refresh(localPayload);
   }
-  const handleOnlyActive = (checked: boolean) => {
-    console.log("_ADG - OnlyActice :", checked);
-    const localPayload: ListPayload = {
-      ...payload,
-      onlyActive: checked,
-    };
-    refresh(localPayload);
-  };
   const handleReload = () => {
     console.log("_ADG - Reload ");
     refresh(payload);
@@ -174,6 +193,7 @@ export default function ActiveDataGrid({
       {/* D A T A   G R I D */}
 
       <StripedDataGrid
+        sx={{ height: "520px" }}
         columns={columns}
         rows={listResponse.content ? listResponse.content : []}
         rowCount={listResponse.count ? listResponse.count : 0}
@@ -212,18 +232,35 @@ export default function ActiveDataGrid({
           control={<Switch />}
           label="Active only"
           onChange={(event, checked) => {
-            handleOnlyActive(checked);
+            dispatch({ type: ACTIVE_ONLY, checked });
           }}
-          checked={payload.onlyActive}
+          checked={_payload.onlyActive}
           sx={{ paddingLeft: 2 }}
         />
-        <ActiveButton outline rounded secondary onClick={handleReload}>
+        <ActiveButton
+          outline
+          rounded
+          secondary
+          onClick={() => dispatch({ type: REFRESH })}
+        >
           <MdRefresh /> Refresh
         </ActiveButton>
-        <ActiveButton outline rounded warning onClick={handleClear}>
+        <ActiveButton
+          outline
+          rounded
+          warning
+          onClick={() => dispatch({ type: CLEAR_ALL_FILTERS })}
+        >
           <MdClear /> Clear All Filter...
         </ActiveButton>
       </div>
     </div>
   );
 }
+
+const PAGINATION: string = "PAGINATION";
+const SORT: string = "SORT";
+const FILTER: string = "FILTER";
+const ACTIVE_ONLY: string = "ACTIVE_ONLY";
+const REFRESH: string = "REFRESH";
+const CLEAR_ALL_FILTERS: string = "CLEAR_ALL_FILTERS";

@@ -9,3 +9,6 @@ spring:
     username: root
     password: Test12345
 
+# R2DBC URL
+#r2dbc:
+#  url: r2dbc:h2:mem://./testdb

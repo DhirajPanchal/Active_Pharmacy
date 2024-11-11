@@ -40,7 +40,7 @@ public class DrugService {
         if (Boolean.TRUE.equals(requestBody.isOnlyActive())) {
             return this.repository.findAllByAndActive(true, pageable)
                     .collectList()
-                    .zipWith(this.repository.count())
+                    .zipWith(this.repository.countByActive(true))
                     .map(p -> new ListResponse<>(p.getT1(), p.getT2()));
         } else {
             return this.repository.findAllBy(pageable)
