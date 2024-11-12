@@ -9,25 +9,66 @@ body {
   letter-spacing: 1px;
 }
 
-.active-data-grid{
-  border: 0px solid lightgrey;
+.adg-wrapper {
+  border: 1px solid lightgrey;
   border-radius: 4px;
   padding: 8px;
-} 
-
-.active-data-grid-header {
+}
+.adg-header {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: start;
-  padding: 0 8px 8px 0;
-  gap: 8px;
+  padding: 0 2px 8px 0;
 }
 
-.active-data-grid-footer {
+.adg-header-left-slot {
   display: flex;
-  justify-content: end;
-  padding: 8px 0px 0px 0;
+  flex-direction: row;
+  justify-content: start;
   gap: 8px;
 }
 
+.adg-header-right-slot {
+  display: flex;
+  flex-grow: 1;
+  justify-content: end;
+  gap: 8px;
+}
+.adg-filter {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+.adg-filter-body {
+
+
+  border-radius: 4px;
+  width: 480px;
+}
+.adg-filter-title {
+  display: flex;
+  flex-direction: row;
+  height: 48px;
+  gap: 8px;
+  padding: 4px 4px 4px 12px;
+  left: 0;
+  align-items: center;
+}
+
+.adg-filter-toolbar {
+  display: flex;
+  flex-direction: row;
+  height: 56px;
+  bottom: 0;
+  left: 0;
+  justify-content: end;
+  gap: 8px;
+  padding: 8px;
+}
+.adg-filter-form {
+}

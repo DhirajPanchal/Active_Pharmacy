@@ -15,7 +15,7 @@ export const DRUGLIST_COLUMNS: GridColDef[] = [
     headerName: "Drug Label Name",
     type: "string",
     width: 320,
-    filterOperators: containsOnlyOperator,
+    filterable: false,
   },
   {
     field: "category_id",
@@ -29,7 +29,7 @@ export const DRUGLIST_COLUMNS: GridColDef[] = [
     headerName: "Category Name",
     type: "string",
     width: 160,
-    filterOperators: containsOnlyOperator,
+    filterable: false,
   },
   {
     field: "class_id",
@@ -43,7 +43,7 @@ export const DRUGLIST_COLUMNS: GridColDef[] = [
     headerName: "Class Name",
     type: "string",
     width: 160,
-    filterOperators: containsOnlyOperator,
+    filterable: false,
   },
   { field: "active", headerName: "Active", type: "boolean", width: 80 },
   // { field: "deleted", headerName: "Deleted", type: "boolean", width: 80,    filterable:false },

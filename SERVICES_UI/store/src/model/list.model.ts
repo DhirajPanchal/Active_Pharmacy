@@ -1,10 +1,12 @@
+import { GridFilterItem } from "@mui/x-data-grid-pro";
+
 export type SortObject = { [key: string]: string };
 
-export type FilterItem = { field: string; operator: string; value?: string };
+// export type FilterItem = { id:string, field: string; operator: string; value?: string };
 
 export interface ListPayload {
   sort?: SortObject;
-  filter?: FilterItem[];
+  filter?: GridFilterItem[];
   onlyActive: boolean;
   ui_only: {
     index: number;
@@ -13,7 +15,7 @@ export interface ListPayload {
 }
 
 export const DEFAULT_LIST_PAYLOAD: ListPayload = {
-  filter: [{ field: "category_name", operator: "contains", value: "A" }, { field: "class_name", operator: "contains", value: "B" }],
+  filter: [{ field: "drug_label_name", operator: "contains", value: "DDD", id:1 }],
   sort: { id: "asc" },
   onlyActive: false,
   ui_only: {
@@ -26,3 +28,4 @@ export interface ListResponse<T> {
   content: T[];
   count: number;
 }
+

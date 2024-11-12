@@ -54,7 +54,7 @@ function ActiveDropdown({ options, value, onChange, title="Select..." }: ActiveD
   });
 
   return (
-    <div ref={divEl} className="w-48 relative z-50">
+    <div ref={divEl} className="w-48 relative z-10">
       <Panel
         className="flex justify-between items-center cursor-pointer"
         onClick={handleClick}

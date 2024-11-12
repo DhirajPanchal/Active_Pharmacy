@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useReducer } from "react";
+import React, { PropsWithChildren, useReducer, useState } from "react";
 import {
   DataGridPro,
   GridColDef,
@@ -11,16 +11,16 @@ import {
   GridFilterItem,
 } from "@mui/x-data-grid-pro";
 import { alpha, styled } from "@mui/material/styles";
-import { MdRefresh, MdClear } from "react-icons/md";
+import { MdRefresh, MdClear, MdOutlineFilterAlt } from "react-icons/md";
 import {
   DEFAULT_LIST_PAYLOAD,
-  FilterItem,
   ListPayload,
   ListResponse,
   SortObject,
 } from "../../model/list.model";
 import ActiveButton from "../../control/ActiveButton";
 import { FormControlLabel, Switch } from "@mui/material";
+import FilterModal from "./FilterModal";
 
 type ActiveDataGridProps = {
   columns: GridColDef[];
@@ -40,7 +40,7 @@ export default function ActiveDataGrid({
   const ODD_OPACITY = 0.2;
 
   const [_payload, dispatch] = useReducer(reducer, DEFAULT_LIST_PAYLOAD);
-
+  const [filterOpen, setFilterOpen] = useState<boolean>(true);
   const handleRowClick = (model: GridRowSelectionModel) => {
     console.log("_ADG - Row Selection :", model);
   };
@@ -143,54 +143,15 @@ export default function ActiveDataGrid({
     return { items: list };
   };
 
-  function handleFilter(model: GridFilterModel) {
-    // console.log("_ADG - Filter :", model);
-    console.log(
-      "--------------------------------------------------------------------------"
-    );
-
-    if (model && model.items) {
-      let list: FilterItem[] = [];
-      if (model.items.length > 0) {
-        model.items.map((item) => {
-          console.log(item);
-
-          if (item && item.field && item.operator && item.value) {
-          list.push({
-            field: item.field,
-            operator: item.operator,
-            value: item.value,
-          });
-          }
-        });
-      }
-      // console.log("LIST  ", list);
-      // console.log("STATE ", _payload.filter);
-      // if (list.length !== _payload.filter.length) {
-      //   console.log(">>>");
-      //   dispatch({ type: FILTER, list });
-      // }
-      const l1 = [...list];
-      const l2 = [..._payload.filter];
-      console.log(l1);
-      console.log(l2);
-
-      const l3 = l1.filter(
-        (a: FilterItem) =>
-          !l2.some(
-            (b: FilterItem) =>
-              a.field === b.field &&
-              a.operator === b.operator &&
-              a.value === b.value
-          )
-      );
-      console.log(l3);
-      if (l3.length > 0 || l1.length !== l2.length) {
-        console.log(">>>");
-        dispatch({ type: FILTER, list });
-      }
-    }
-  }
+  const filterNow = () => {
+    console.log("N O W");
+    // const list = [
+    //   { id: 2, field: "category_name", operator: "contains", value: "A" },
+    //   { id: 3, field: "class_name", operator: "contains", value: "B" },
+    // ];
+    // dispatch({ type: FILTER, list });
+    setFilterOpen(true)
+  };
 
   const StripedDataGrid = styled(DataGridPro)(({ theme }) => ({
     [`& .${gridClasses.row}.even`]: {
@@ -226,14 +187,42 @@ export default function ActiveDataGrid({
   }));
 
   return (
-    <div className="active-data-grid">
-      {/* H E A D E R */}
+    <div className="adg-wrapper">
+      <div className="adg-header">
+        <div className="adg-header-left-slot">{props.children}</div>
 
-      <div className="active-data-grid-header">
-        {/* <h2>Header</h2> */}
-        {props.children}
+        <div className="adg-header-right-slot">
+          <ActiveButton outline rounded warning onClick={filterNow}>
+            <MdOutlineFilterAlt /> Filter
+          </ActiveButton>
+
+          <FormControlLabel
+            control={<Switch />}
+            label="Active only"
+            onChange={(_event, checked) => {
+              dispatch({ type: ACTIVE_ONLY, checked });
+            }}
+            checked={_payload.onlyActive}
+            sx={{ paddingLeft: 2 }}
+          />
+          {/* <ActiveButton
+            outline
+            rounded
+            secondary
+            onClick={() => dispatch({ type: REFRESH })}
+          >
+            <MdRefresh /> Refresh
+          </ActiveButton> */}
+          <ActiveButton
+            outline
+            rounded
+            danger
+            onClick={() => dispatch({ type: CLEAR_ALL_FILTERS })}
+          >
+            <MdClear /> Clear All
+          </ActiveButton>
+        </div>
       </div>
-
       {/* D A T A   G R I D */}
 
       <StripedDataGrid
@@ -267,45 +256,16 @@ export default function ActiveDataGrid({
         sortModel={deriveSortModel(_payload)}
         onSortModelChange={(model) => handleSort(model)}
         filterMode="server"
-        filterDebounceMs={5000}
+        // filterDebounceMs={5000}
         filterModel={deriveFilterModel(_payload)}
-        onFilterModelChange={(model) => handleFilter(model)}
+        // onFilterModelChange={(model) => handleFilter(model)}
         onRowSelectionModelChange={(model) => handleRowClick(model)}
       />
 
-      {/* F O O T E R */}
-
-      <div className="active-data-grid-footer">
-        <FormControlLabel
-          control={<Switch />}
-          label="Active only"
-          onChange={(_event, checked) => {
-            dispatch({ type: ACTIVE_ONLY, checked });
-          }}
-          checked={_payload.onlyActive}
-          sx={{ paddingLeft: 2 }}
-        />
-        <ActiveButton
-          outline
-          rounded
-          secondary
-          onClick={() => dispatch({ type: REFRESH })}
-        >
-          <MdRefresh /> Refresh
-        </ActiveButton>
-        <ActiveButton
-          outline
-          rounded
-          warning
-          onClick={() => dispatch({ type: CLEAR_ALL_FILTERS })}
-        >
-          <MdClear /> Clear All Filter...
-        </ActiveButton>
-      </div>
+      <FilterModal isOpen={filterOpen} onClose={() => setFilterOpen(false)}/>
     </div>
   );
 }
-
 const PAGINATION: string = "PAGINATION";
 const SORT: string = "SORT";
 const FILTER: string = "FILTER";
