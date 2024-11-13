@@ -7,12 +7,16 @@ import App from "./App";
 const rootElement = document.getElementById("app");
 const root = createRoot(rootElement);
 
-root.render(<App />);
+root.render(
 
+    <App />
 
+);
 
-{/* <StrictMode>
+{
+  /* <StrictMode>
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </StrictMode> */}
+  </StrictMode> */
+}

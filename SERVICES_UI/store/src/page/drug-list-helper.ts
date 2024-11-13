@@ -1,6 +1,7 @@
 import { GridColDef } from "@mui/x-data-grid-pro";
-import { dateValueGetter, containsOnlyOperator } from "../util/utils";
+import { dateValueGetter } from "../util/utils";
 import { Option } from "../control/ActiveDropdown";
+import { FilterItem } from "../component/datagrid/FilterModal";
 
 export const DRUGLIST_COLUMNS: GridColDef[] = [
   {
@@ -45,7 +46,7 @@ export const DRUGLIST_COLUMNS: GridColDef[] = [
     width: 160,
     filterable: false,
   },
-  { field: "active", headerName: "Active", type: "boolean", width: 80 },
+  { field: "active", headerName: "Active", width: 160 },
   // { field: "deleted", headerName: "Deleted", type: "boolean", width: 80,    filterable:false },
   {
     field: "updatedOn",
@@ -198,4 +199,36 @@ export const drugClasses: Option[] = [
   { label: "Natural Penicillins", value: "Natural Penicillins" },
   { label: "Bacterial Vaccines", value: "Bacterial Vaccines" },
   { label: "Viral Vaccines", value: "Viral Vaccines" },
+];
+
+export const DRUGLIST_FILTER_OPTIONS: FilterItem[] = [
+  {
+    id: 1,
+    field: "drug_label_name",
+    label: "Drug Label Name",
+    type: "string",
+    operators: ["contains", "equals"],
+  },
+  {
+    id: 2,
+    field: "category_name",
+    label: "Category Name",
+    type: "string",
+    operators: ["contains", "equals"],
+  },
+  {
+    id: 3,
+    field: "class_name",
+    label: "Class Name",
+    type: "string",
+    operators: ["contains", "equals"],
+  },
+  {
+    id: 4,
+    field: "active",
+    label: "Active",
+    type: "boolean",
+    operators: ["equals"],
+    values: [true, false],
+  },
 ];

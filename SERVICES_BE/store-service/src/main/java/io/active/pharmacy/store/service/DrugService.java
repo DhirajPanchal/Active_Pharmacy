@@ -32,6 +32,10 @@ public class DrugService {
 
         System.out.println("__ BaseService . LIST :X " + requestBody.isOnlyActive());
 
+        if (requestBody.getFilter() != null) {
+            requestBody.getFilter().forEach(System.out::println);
+        }
+
         Sort sort = createSort(requestBody);
 
         System.out.println(sort);

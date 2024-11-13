@@ -11,7 +11,11 @@ import {
   GridFilterItem,
 } from "@mui/x-data-grid-pro";
 import { alpha, styled } from "@mui/material/styles";
-import { MdRefresh, MdClear, MdOutlineFilterAlt } from "react-icons/md";
+import {
+  AiOutlineFilter,
+  AiTwotoneFilter,
+  AiOutlineClear,
+} from "react-icons/ai";
 import {
   DEFAULT_LIST_PAYLOAD,
   ListPayload,
@@ -20,7 +24,8 @@ import {
 } from "../../model/list.model";
 import ActiveButton from "../../control/ActiveButton";
 import { FormControlLabel, Switch } from "@mui/material";
-import FilterModal from "./FilterModal";
+import FilterModal, { FilterItem } from "./FilterModal";
+import { DRUGLIST_FILTER_OPTIONS } from "../../page/drug-list-helper";
 
 type ActiveDataGridProps = {
   columns: GridColDef[];
@@ -40,7 +45,7 @@ export default function ActiveDataGrid({
   const ODD_OPACITY = 0.2;
 
   const [_payload, dispatch] = useReducer(reducer, DEFAULT_LIST_PAYLOAD);
-  const [filterOpen, setFilterOpen] = useState<boolean>(true);
+  const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const handleRowClick = (model: GridRowSelectionModel) => {
     console.log("_ADG - Row Selection :", model);
   };
@@ -136,21 +141,20 @@ export default function ActiveDataGrid({
   const deriveFilterModel = (payload: ListPayload): GridFilterModel => {
     let list: GridFilterItem[] = [];
     if (payload && payload.filter && payload.filter.length > 0) {
-      payload.filter.map((fi) => list.push(fi));
+      payload.filter.map((fi, index) => list.push({ ...fi, id: index }));
     }
-    console.log("FIs : ", list);
-    //GridFilterModel
     return { items: list };
+  };
+
+  const onFilterChange = (list: GridFilterItem[]) => {
+    console.log("FILTER ", list);
+    dispatch({ type: FILTER, list });
+    setFilterOpen(false);
   };
 
   const filterNow = () => {
     console.log("N O W");
-    // const list = [
-    //   { id: 2, field: "category_name", operator: "contains", value: "A" },
-    //   { id: 3, field: "class_name", operator: "contains", value: "B" },
-    // ];
-    // dispatch({ type: FILTER, list });
-    setFilterOpen(true)
+    setFilterOpen(true);
   };
 
   const StripedDataGrid = styled(DataGridPro)(({ theme }) => ({
@@ -193,7 +197,12 @@ export default function ActiveDataGrid({
 
         <div className="adg-header-right-slot">
           <ActiveButton outline rounded warning onClick={filterNow}>
-            <MdOutlineFilterAlt /> Filter
+            {_payload.filter.length === 0 ? (
+              <AiOutlineFilter className="mr-2" />
+            ) : (
+              <AiTwotoneFilter className="mr-2" />
+            )}{" "}
+            Filter
           </ActiveButton>
 
           <FormControlLabel
@@ -205,21 +214,13 @@ export default function ActiveDataGrid({
             checked={_payload.onlyActive}
             sx={{ paddingLeft: 2 }}
           />
-          {/* <ActiveButton
-            outline
-            rounded
-            secondary
-            onClick={() => dispatch({ type: REFRESH })}
-          >
-            <MdRefresh /> Refresh
-          </ActiveButton> */}
           <ActiveButton
             outline
             rounded
             danger
             onClick={() => dispatch({ type: CLEAR_ALL_FILTERS })}
           >
-            <MdClear /> Clear All
+            <AiOutlineClear className="mr-2" /> Clear
           </ActiveButton>
         </div>
       </div>
@@ -262,7 +263,13 @@ export default function ActiveDataGrid({
         onRowSelectionModelChange={(model) => handleRowClick(model)}
       />
 
-      <FilterModal isOpen={filterOpen} onClose={() => setFilterOpen(false)}/>
+      <FilterModal
+        FILTER_CONFIG={DRUGLIST_FILTER_OPTIONS}
+        filterModel={_payload.filter}
+        onFilterChange={(model) => onFilterChange(model)}
+        isOpen={filterOpen}
+        onClose={() => setFilterOpen(false)}
+      />
     </div>
   );
 }

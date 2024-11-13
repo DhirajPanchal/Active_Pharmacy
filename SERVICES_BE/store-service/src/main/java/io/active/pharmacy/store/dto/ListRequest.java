@@ -23,11 +23,3 @@ public class ListRequest {
 
 }
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-class FilterItem{
-    private String field;
-    private String operator;
-    private String value;
-}
