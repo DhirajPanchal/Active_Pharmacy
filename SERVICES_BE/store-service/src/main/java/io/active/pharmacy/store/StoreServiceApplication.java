@@ -16,10 +16,3 @@ public class StoreServiceApplication {
 
 }
 
-//
-//   WIP for ConnectionFactory for Databaseclient
-//
-//import org.springframework.boot.context.properties.EnableConfigurationProperties;
-//import io.active.pharmacy.store.config.R2DBCConfigurationProperties;
-//@EnableConfigurationProperties(R2DBCConfigurationProperties.class)
-//

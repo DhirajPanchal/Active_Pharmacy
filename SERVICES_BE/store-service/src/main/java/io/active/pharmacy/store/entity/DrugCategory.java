@@ -7,21 +7,13 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.time.Instant;
 
 @Data
-@Table("drug")
-public class Drug {
+@Table("drug_category")
+public class DrugCategory {
 
     @Id
     private long id;
 
-    private String drug_label_name;
-
-    private long category_id;
-
     private String category_name;
-
-    private long class_id;
-
-    private String class_name;
 
     private boolean active;
 
@@ -31,8 +23,6 @@ public class Drug {
 
     private Instant updated_on;
 
-    public Drug() {
-
+    public DrugCategory() {
     }
-
 }

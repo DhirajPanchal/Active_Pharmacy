@@ -1,10 +1,11 @@
 package io.active.pharmacy.store.service;
 
 
+import io.active.pharmacy.store.dao.XDrugReactiveDao;
 import io.active.pharmacy.store.dto.ListRequest;
 import io.active.pharmacy.store.dto.ListResponse;
 import io.active.pharmacy.store.entity.Drug;
-import io.active.pharmacy.store.repository.DrugRepository;
+import io.active.pharmacy.store.repository.DrugReactiveCrudRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -18,17 +19,20 @@ import java.util.Set;
 
 @Slf4j
 @Service
-public class DrugService {
+public class XDrugService {
 
     @Autowired
-    private DrugRepository repository;
+    private DrugReactiveCrudRepository repository;
+
+    @Autowired
+    private XDrugReactiveDao dao;
 
     public Flux<Drug> getAllDrugs() {
         System.out.println("____ SERVICE");
         return this.repository.findAll();
     }
 
-    public Mono<ListResponse<Drug>> list(int index, int size, ListRequest requestBody) {
+    public Mono<ListResponse<Drug>> listResponse(int index, int size, ListRequest requestBody) {
 
         System.out.println("__ BaseService . LIST :X " + requestBody.isOnlyActive());
 
@@ -55,10 +59,11 @@ public class DrugService {
 
     }
 
+
     //  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
     //  NOT USED - Standard Entity listing.
     //  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-    public Mono<Page<Drug>> listEntity(int index, int size, ListRequest requestBody) {
+    public Mono<Page<Drug>> listPage(int index, int size, ListRequest requestBody) {
 
         System.out.println("__ BaseService . LIST :X " + requestBody.isOnlyActive());
 
@@ -103,6 +108,26 @@ public class DrugService {
         System.out.println(" SORT :: ");
         System.out.println(sort);
         return sort;
+    }
+
+
+    public Flux<Drug> listDrug(int index, int size, ListRequest requestBody) {
+        System.out.println(" ______ DRUG . SERVICE - LIST " );
+        return this.dao.listDrug(index, size, requestBody);
+    }
+
+    public Mono<Long> listCount(int index, int size, ListRequest requestBody) {
+        System.out.println(" ______ DRUG . SERVICE - COUNT " );
+        return this.dao.listCount(index, size, requestBody);
+    }
+
+    public Mono<ListResponse<Drug>> list1(int index, int size, ListRequest requestBody) {
+        System.out.println(" ______ DRUG . POST . SERVICE - LIST ***" + requestBody);
+
+
+        return this.dao.list1(index, size, requestBody);
+
+
     }
 
 }

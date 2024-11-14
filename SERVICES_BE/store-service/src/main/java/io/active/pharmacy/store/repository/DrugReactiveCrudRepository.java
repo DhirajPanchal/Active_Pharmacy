@@ -8,7 +8,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
-public interface DrugRepository extends ReactiveCrudRepository<Drug, Long> {
+public interface DrugReactiveCrudRepository extends ReactiveCrudRepository<Drug, Long> {
 
     Flux<Drug> findAllBy(Pageable pageable);
 

@@ -132,7 +132,7 @@ const request = {
 
 const loadDrugList = (payload: ListPayload = DEFAULT_LIST_PAYLOAD) =>
   request.post<ListResponse<Drug>>(
-    `drug/list?index=${payload.ui_only.index}&size=${payload.ui_only.size}`,
+    `api/v1/list/drug?index=${payload.ui_only.index}&size=${payload.ui_only.size}`,
     payload
   );
 

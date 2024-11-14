@@ -49,7 +49,7 @@ export const DRUGLIST_COLUMNS: GridColDef[] = [
   { field: "active", headerName: "Active", width: 160 },
   // { field: "deleted", headerName: "Deleted", type: "boolean", width: 80,    filterable:false },
   {
-    field: "updatedOn",
+    field: "updated_on",
     headerName: "Last Updated On",
     width: 160,
     type: "string",
@@ -57,7 +57,7 @@ export const DRUGLIST_COLUMNS: GridColDef[] = [
     filterable: false,
   },
   // {
-  //   field: "createdOn",
+  //   field: "created_on",
   //   headerName: "Created On",
   //   width: 160,
   //   type: "string",
@@ -222,13 +222,5 @@ export const DRUGLIST_FILTER_OPTIONS: FilterItem[] = [
     label: "Class Name",
     type: "string",
     operators: ["contains", "equals"],
-  },
-  {
-    id: 4,
-    field: "active",
-    label: "Active",
-    type: "boolean",
-    operators: ["equals"],
-    values: [true, false],
   },
 ];
