@@ -1,19 +1,11 @@
 package io.active.pharmacy.store.entity;
 
 import lombok.Data;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
-
-import java.time.Instant;
 
 @Data
 @Table("drug")
-public class Drug {
-
-    @Id
-    private long id;
-
-    private String drug_label_name;
+public class Drug extends BaseEntity {
 
     private long category_id;
 
@@ -22,14 +14,6 @@ public class Drug {
     private long class_id;
 
     private String class_name;
-
-    private boolean active;
-
-    private boolean deleted;
-
-    private Instant created_on;
-
-    private Instant updated_on;
 
     public Drug() {
 

@@ -4,7 +4,8 @@ package io.active.pharmacy.store.web;
 import io.active.pharmacy.store.dto.ListRequest;
 import io.active.pharmacy.store.dto.ListResponse;
 import io.active.pharmacy.store.entity.Drug;
-import io.active.pharmacy.store.service.XDrugService;
+import io.active.pharmacy.store.service.TestService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -31,13 +32,13 @@ import static io.active.pharmacy.store.constant.RestConstants.*;
                 RequestMethod.DELETE,
                 RequestMethod.POST
         })
-//@Slf4j
+@Slf4j
 //@RestController
 //@RequestMapping("drug")
-public class XDrugController {
+public class TestController {
 
     @Autowired
-    private XDrugService service;
+    private TestService service;
 
     @GetMapping
     public Flux<Drug> allDrugs() {

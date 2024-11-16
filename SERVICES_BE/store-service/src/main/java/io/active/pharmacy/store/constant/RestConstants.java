@@ -10,8 +10,8 @@ public class RestConstants {
     public static final String PAGE_SIZE = "size";
     public static final String PAGE_SIZE_DEFAULT = "10";
 
-    public static final String ENTITY_TYPE = "size";
-    public static final String SEARCH = "10";
+    public static final String ENTITY_TYPE = "type";
+    public static final String SEARCH = "search";
 
 
     public static ListRequest defaultListRequest = new ListRequest();

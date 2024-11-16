@@ -14,20 +14,20 @@ public class SqlQueryUtil {
 
     static String activeOnly = " AND active IS TRUE";
 
-    public static List<String> composeSqlQuery(String type, int index, int size, ListRequest requestBody) {
-        log.info(" _ DRUG . LIST . SQL QUERY ");
+    public static List<String> composeSqlQuery(String type, int index, int size, ListRequest payload) {
+        log.info(" SQL QUERY : "+type);
 
         StringBuilder builder = new StringBuilder();
         builder.append(" FROM ");
         builder.append(type);
         //   W H E R E
-        builder.append(whereClause(requestBody));
+        builder.append(whereClause(payload));
 
         //   C O U N T
         String sqlCount = "SELECT COUNT(*)" + builder.toString() + ";";
 
         //   O R D E R  B Y
-        builder.append(orderByClause(requestBody));
+        builder.append(orderByClause(payload));
 
         //   P A G I N A T I O N
         builder.append(pagination(index, size));
@@ -45,21 +45,21 @@ public class SqlQueryUtil {
     }
 
 
-    private static String whereClause(ListRequest requestBody) {
+    private static String whereClause(ListRequest payload) {
         System.out.println("FILTER::");
         StringBuilder sb = new StringBuilder();
 
         sb.append(" WHERE deleted IS false");
 
-        if (requestBody != null) {
+        if (payload != null) {
 
 
-            if (Boolean.TRUE.equals(requestBody.isOnlyActive())) {
+            if (Boolean.TRUE.equals(payload.isOnlyActive())) {
                 sb.append(activeOnly);
             }
 
-            if (requestBody.getFilter() != null) {
-                requestBody.getFilter().forEach((FilterItem filterItem) -> {
+            if (payload.getFilter() != null) {
+                payload.getFilter().forEach((FilterItem filterItem) -> {
 
 
                             if (filterItem != null
@@ -96,18 +96,18 @@ public class SqlQueryUtil {
     }
 
 
-    private static String orderByClause(ListRequest requestBody) {
+    private static String orderByClause(ListRequest payload) {
         StringBuilder orderBy = new StringBuilder("");
         System.out.println("SORT::");
-        if (requestBody != null && requestBody.getSort() != null) {
-            Set<String> keys = requestBody.getSort().keySet();
+        if (payload != null && payload.getSort() != null) {
+            Set<String> keys = payload.getSort().keySet();
             int multi = -1;
 
             for (String key : keys) {
                 multi++;
 
-                System.out.println(multi + " - " + key + " [ " + requestBody.getSort().get(key) + " ]");
-                String order = requestBody.getSort().get(key);
+                System.out.println(multi + " - " + key + " [ " + payload.getSort().get(key) + " ]");
+                String order = payload.getSort().get(key);
                 if (multi == 0) {
                     orderBy.append(" ORDER BY ");
                 }

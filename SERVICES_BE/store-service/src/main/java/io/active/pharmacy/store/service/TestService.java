@@ -1,7 +1,7 @@
 package io.active.pharmacy.store.service;
 
 
-import io.active.pharmacy.store.dao.XDrugReactiveDao;
+import io.active.pharmacy.store.dao.TestReactiveDao;
 import io.active.pharmacy.store.dto.ListRequest;
 import io.active.pharmacy.store.dto.ListResponse;
 import io.active.pharmacy.store.entity.Drug;
@@ -18,14 +18,14 @@ import java.util.List;
 import java.util.Set;
 
 @Slf4j
-@Service
-public class XDrugService {
+//@Service
+public class TestService {
 
     @Autowired
     private DrugReactiveCrudRepository repository;
 
     @Autowired
-    private XDrugReactiveDao dao;
+    private TestReactiveDao dao;
 
     public Flux<Drug> getAllDrugs() {
         System.out.println("____ SERVICE");
@@ -60,9 +60,6 @@ public class XDrugService {
     }
 
 
-    //  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-    //  NOT USED - Standard Entity listing.
-    //  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
     public Mono<Page<Drug>> listPage(int index, int size, ListRequest requestBody) {
 
         System.out.println("__ BaseService . LIST :X " + requestBody.isOnlyActive());

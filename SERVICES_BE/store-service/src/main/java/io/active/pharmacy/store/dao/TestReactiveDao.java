@@ -10,14 +10,14 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@Component
-public class XDrugReactiveDao {
+//@Component
+public class TestReactiveDao {
 
     private ConnectionFactory connectionFactory;
 
     private DatabaseClient databaseClient;
 
-    public XDrugReactiveDao(ConnectionFactory connectionFactory) {
+    public TestReactiveDao(ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
         this.databaseClient = DatabaseClient.create(connectionFactory);
     }
@@ -68,5 +68,3 @@ public class XDrugReactiveDao {
 
     }
 }
-
-//LIMIT 5,10

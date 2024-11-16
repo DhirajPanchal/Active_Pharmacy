@@ -12,12 +12,6 @@ import org.springframework.context.annotation.Configuration;
 import static io.r2dbc.spi.ConnectionFactoryOptions.PASSWORD;
 import static io.r2dbc.spi.ConnectionFactoryOptions.USER;
 
-//
-//
-// WIP : NOT USED YET
-//
-//
-
 @Configuration
 public class DataSourceConfig {
 

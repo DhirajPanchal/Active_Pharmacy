@@ -1,6 +1,6 @@
 package io.active.pharmacy.store.web;
 
-import io.active.pharmacy.store.dto.ListProviderItem;
+import io.active.pharmacy.store.dto.ListItem;
 import io.active.pharmacy.store.dto.ListRequest;
 import io.active.pharmacy.store.dto.ListResponse;
 import io.active.pharmacy.store.entity.Drug;
@@ -23,7 +23,8 @@ import static io.active.pharmacy.store.constant.RestConstants.*;
                 "http://localhost:8001",
         },
         methods = {
-                RequestMethod.POST
+                RequestMethod.POST,
+                RequestMethod.GET
         })
 @Slf4j
 @RestController
@@ -42,13 +43,13 @@ public class ListingReactiveController {
     @PostMapping("/drug-category")
     public ResponseEntity<Mono<ListResponse<DrugCategory>>> drugCategoryListing(@RequestParam(name = PAGE_INDEX, defaultValue = PAGE_INDEX_DEFAULT) int index,
                                                                                 @RequestParam(name = PAGE_SIZE, defaultValue = PAGE_SIZE_DEFAULT) int size,
-                                                                                @RequestBody(required = false) ListRequest requestBody) {
+                                                                                @RequestBody(required = false) ListRequest payload) {
         log.info(" _ DRUG-CAT . LIST ");
-        if (requestBody == null) {
-            requestBody = defaultListRequest;
+        if (payload == null) {
+            payload = defaultListRequest;
         }
 
-        Mono<ListResponse<DrugCategory>> listResponse = service.drugCategoryListing(index, size, requestBody);
+        Mono<ListResponse<DrugCategory>> listResponse = service.drugCategoryListing(index, size, payload);
 
         return new ResponseEntity<>(listResponse, HttpStatus.OK);
 
@@ -58,13 +59,13 @@ public class ListingReactiveController {
     @PostMapping("/drug-class")
     public ResponseEntity<Mono<ListResponse<DrugClass>>> drugClassListing(@RequestParam(name = PAGE_INDEX, defaultValue = PAGE_INDEX_DEFAULT) int index,
                                                                           @RequestParam(name = PAGE_SIZE, defaultValue = PAGE_SIZE_DEFAULT) int size,
-                                                                          @RequestBody(required = false) ListRequest requestBody) {
+                                                                          @RequestBody(required = false) ListRequest payload) {
         log.info(" _ DRUG-CLS . LIST ");
-        if (requestBody == null) {
-            requestBody = defaultListRequest;
+        if (payload == null) {
+            payload = defaultListRequest;
         }
 
-        Mono<ListResponse<DrugClass>> listResponse = service.drugClassListing(index, size, requestBody);
+        Mono<ListResponse<DrugClass>> listResponse = service.drugClassListing(index, size, payload);
 
         return new ResponseEntity<>(listResponse, HttpStatus.OK);
 
@@ -73,13 +74,13 @@ public class ListingReactiveController {
     @PostMapping("/drug")
     public ResponseEntity<Mono<ListResponse<Drug>>> list(@RequestParam(name = PAGE_INDEX, defaultValue = PAGE_INDEX_DEFAULT) int index,
                                                          @RequestParam(name = PAGE_SIZE, defaultValue = PAGE_SIZE_DEFAULT) int size,
-                                                         @RequestBody(required = false) ListRequest requestBody) {
+                                                         @RequestBody(required = false) ListRequest payload) {
         log.info(" _ DRUG . LIST ");
-        if (requestBody == null) {
-            requestBody = defaultListRequest;
+        if (payload == null) {
+            payload = defaultListRequest;
         }
 
-        Mono<ListResponse<Drug>> listResponse = service.drugListing(index, size, requestBody);
+        Mono<ListResponse<Drug>> listResponse = service.drugListing(index, size, payload);
 
         return new ResponseEntity<>(listResponse, HttpStatus.OK);
 
@@ -87,10 +88,10 @@ public class ListingReactiveController {
 
 
     @GetMapping("/provider")
-    public ResponseEntity<Mono<List<ListProviderItem>>> listProvider(@RequestParam(name = ENTITY_TYPE, defaultValue = "DRUG") String entityType,
-                                                                     @RequestParam(name = SEARCH, defaultValue = "") String search) {
+    public ResponseEntity<Mono<List<ListItem>>> listProvider(@RequestParam(name = ENTITY_TYPE, defaultValue = "drug_category") String entityType,
+                                                             @RequestParam(name = SEARCH, defaultValue = "") String search) {
 
-        Mono<List<ListProviderItem>> provider = service.listProvider(entityType, search);
+        Mono<List<ListItem>> provider = service.listProvider(entityType, search);
 
         return new ResponseEntity<>(provider, HttpStatus.OK);
     }

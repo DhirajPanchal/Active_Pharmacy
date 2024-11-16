@@ -1,13 +1,6 @@
 package io.active.pharmacy.store.config;
 
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
-
-//
-//
-// WIP : NOT USED YET
-//
-//
 
 @ConfigurationProperties(prefix = "spring.r2dbc")
 public class R2DBCConfigurationProperties {
