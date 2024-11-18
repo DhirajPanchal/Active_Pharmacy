@@ -25,13 +25,15 @@ import {
 import ActiveButton from "../../control/ActiveButton";
 import { FormControlLabel, Switch } from "@mui/material";
 import FilterModal, { FilterItem } from "./FilterModal";
-import { DRUGLIST_FILTER_OPTIONS } from "../../page/drug-list-helper";
+import { DRUGLIST_FILTER_OPTIONS } from "../../page/drug-list/drug-list-helper";
+import { GoSync } from "react-icons/go";
 
 type ActiveDataGridProps = {
   columns: GridColDef[];
   listResponse: ListResponse<any>;
   triggerRefresh: (payload: any) => void;
   onRowSelection?: (entityId: number) => void | undefined;
+  loading?: boolean;
 };
 
 export default function ActiveDataGrid({
@@ -222,6 +224,11 @@ export default function ActiveDataGrid({
           >
             <AiOutlineClear className="mr-2" /> Clear
           </ActiveButton>
+          {props.loading ? (
+            <GoSync className="animate-spin active-spin" />
+          ) : (
+            <GoSync className="active-spin" />
+          )}
         </div>
       </div>
       {/* D A T A   G R I D */}

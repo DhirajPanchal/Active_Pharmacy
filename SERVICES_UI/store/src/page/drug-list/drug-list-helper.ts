@@ -1,7 +1,7 @@
 import { GridColDef } from "@mui/x-data-grid-pro";
-import { dateValueGetter } from "../util/utils";
-import { Option } from "../control/ActiveDropdown";
-import { FilterItem } from "../component/datagrid/FilterModal";
+import { dateValueGetter } from "../../util/utils";
+import { Option } from "../../control/ActiveDropdown";
+import { FilterItem } from "../../component/datagrid/FilterModal";
 
 export const DRUGLIST_COLUMNS: GridColDef[] = [
   {
@@ -12,7 +12,7 @@ export const DRUGLIST_COLUMNS: GridColDef[] = [
     filterable: false,
   },
   {
-    field: "drug_label_name",
+    field: "name",
     headerName: "Drug Label Name",
     type: "string",
     width: 320,
@@ -204,7 +204,7 @@ export const drugClasses: Option[] = [
 export const DRUGLIST_FILTER_OPTIONS: FilterItem[] = [
   {
     id: 1,
-    field: "drug_label_name",
+    field: "name",
     label: "Drug Label Name",
     type: "string",
     operators: ["contains", "equals"],

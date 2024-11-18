@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.List;
 
 import static io.active.pharmacy.store.constant.RestConstants.*;
@@ -50,7 +51,6 @@ public class ListingReactiveController {
         }
 
         Mono<ListResponse<DrugCategory>> listResponse = service.drugCategoryListing(index, size, payload);
-
         return new ResponseEntity<>(listResponse, HttpStatus.OK);
 
     }
@@ -75,13 +75,13 @@ public class ListingReactiveController {
     public ResponseEntity<Mono<ListResponse<Drug>>> list(@RequestParam(name = PAGE_INDEX, defaultValue = PAGE_INDEX_DEFAULT) int index,
                                                          @RequestParam(name = PAGE_SIZE, defaultValue = PAGE_SIZE_DEFAULT) int size,
                                                          @RequestBody(required = false) ListRequest payload) {
-        log.info(" _ DRUG . LIST ");
+        log.info(" _ DRUG . LIST ....");
         if (payload == null) {
             payload = defaultListRequest;
         }
 
-        Mono<ListResponse<Drug>> listResponse = service.drugListing(index, size, payload);
-
+        Mono<ListResponse<Drug>> listResponse = service.drugListing(index, size, payload).delayElement(Duration.ofMillis(3000));
+        log.info(" _ DRUG . LIST finish");
         return new ResponseEntity<>(listResponse, HttpStatus.OK);
 
     }
