@@ -6,7 +6,7 @@ const localDateTimeFormatter = (dateString: string): string => {
   };
   
   export const dateValueGetter = (params: any): string => {
-    // console.log(params);
+    // // console.log(params);
     let dateStr = "";
     if (params) {
       dateStr = localDateTimeFormatter(params);

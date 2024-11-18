@@ -29,3 +29,8 @@ export interface ListResponse<T> {
 //{ id: 1, field: "drug_label_name", operator: "contains", value: "Disprin" },
 // { id: 2, field: "active", operator: "contains", value: true },
 // { id: 3, field: "class_name", operator: "contains", value: "A" },
+
+export interface ListItem {
+  label: string;
+  value: number;
+}

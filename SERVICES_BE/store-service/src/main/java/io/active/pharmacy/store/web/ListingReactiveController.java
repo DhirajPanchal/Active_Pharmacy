@@ -80,8 +80,7 @@ public class ListingReactiveController {
             payload = defaultListRequest;
         }
 
-        Mono<ListResponse<Drug>> listResponse = service.drugListing(index, size, payload).delayElement(Duration.ofMillis(3000));
-        log.info(" _ DRUG . LIST finish");
+        Mono<ListResponse<Drug>> listResponse = service.drugListing(index, size, payload).delayElement(Duration.ofMillis(1000));
         return new ResponseEntity<>(listResponse, HttpStatus.OK);
 
     }

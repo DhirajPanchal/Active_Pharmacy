@@ -1,4 +1,9 @@
-import React, { PropsWithChildren, useReducer, useState } from "react";
+import React, {
+  PropsWithChildren,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import {
   DataGridPro,
   GridColDef,
@@ -11,11 +16,7 @@ import {
   GridFilterItem,
 } from "@mui/x-data-grid-pro";
 import { alpha, styled } from "@mui/material/styles";
-import {
-  AiOutlineFilter,
-  AiTwotoneFilter,
-  AiOutlineClear,
-} from "react-icons/ai";
+import { AiOutlineClear } from "react-icons/ai";
 import {
   DEFAULT_LIST_PAYLOAD,
   ListPayload,
@@ -27,6 +28,8 @@ import { FormControlLabel, Switch } from "@mui/material";
 import FilterModal, { FilterItem } from "./FilterModal";
 import { DRUGLIST_FILTER_OPTIONS } from "../../page/drug-list/drug-list-helper";
 import { GoSync } from "react-icons/go";
+import { IoSyncSharp } from "react-icons/io5";
+import { ImFilter } from "react-icons/im";
 
 type ActiveDataGridProps = {
   columns: GridColDef[];
@@ -34,6 +37,7 @@ type ActiveDataGridProps = {
   triggerRefresh: (payload: any) => void;
   onRowSelection?: (entityId: number) => void | undefined;
   loading?: boolean;
+  error?: boolean;
 };
 
 export default function ActiveDataGrid({
@@ -46,15 +50,21 @@ export default function ActiveDataGrid({
 
   const ODD_OPACITY = 0.2;
 
-  const [_payload, dispatch] = useReducer(reducer, DEFAULT_LIST_PAYLOAD);
+  const [payload, dispatch] = useReducer(reducer, DEFAULT_LIST_PAYLOAD);
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const handleRowClick = (model: GridRowSelectionModel) => {
-    console.log("_ADG - Row Selection :", model);
+    // console.log("_ADG - Row Selection :", model);
   };
 
+  useEffect(() => {
+    if (triggerRefresh) {
+      triggerRefresh(payload);
+    }
+  }, [payload]);
+
   function reducer(state: any, action: any) {
-    console.log(" CHANGE ", action);
-    // console.log(state);
+    // console.log(" CHANGE ", action);
+    // // console.log(state);
 
     let cache: any;
     switch (action.type) {
@@ -104,13 +114,15 @@ export default function ActiveDataGrid({
         break;
       }
     }
-    // console.log("Payload Changed ", cache);
-    if (cache && triggerRefresh) {
-      triggerRefresh(cache);
-      return cache;
-    } else {
-      return state;
-    }
+    // // console.log("Payload Changed ", cache);
+    // if (cache && triggerRefresh) {
+    //triggerRefresh(cache);
+
+    //   return cache;
+    // } else {
+    //   return state;
+    // }
+    return cache;
   }
 
   function handleSort(model: GridSortModel) {
@@ -149,13 +161,13 @@ export default function ActiveDataGrid({
   };
 
   const onFilterChange = (list: GridFilterItem[]) => {
-    console.log("FILTER ", list);
+    // console.log("FILTER ", list);
     dispatch({ type: FILTER, list });
     setFilterOpen(false);
   };
 
   const filterNow = () => {
-    console.log("N O W");
+    // console.log("N O W");
     setFilterOpen(true);
   };
 
@@ -192,19 +204,36 @@ export default function ActiveDataGrid({
     },
   }));
 
+  const check = () => {
+    console.log(payload);
+  };
+
   return (
-    <div className="adg-wrapper">
+    <div className="adg-wrapper bg-gray-200">
       <div className="adg-header">
         <div className="adg-header-left-slot">{props.children}</div>
 
         <div className="adg-header-right-slot">
-          <ActiveButton outline rounded warning onClick={filterNow}>
-            {_payload.filter.length === 0 ? (
-              <AiOutlineFilter className="mr-2" />
+          <ActiveButton onClick={check}>TEST</ActiveButton>
+          <ActiveButton amazon onClick={filterNow}>
+            {payload.filter.length === 0 ? (
+              <ImFilter className="mr-2 text-gray-500" />
             ) : (
-              <AiTwotoneFilter className="mr-2" />
+              <ImFilter className="mr-2 text-gray-500 animate-ping" />
             )}{" "}
             Filter
+          </ActiveButton>
+
+          <ActiveButton amazon onClick={filterNow}>
+            <ImFilter className="mr-1 ml-1 text-gray-500" />
+            Filter Builder
+          </ActiveButton>
+
+          <ActiveButton
+            amazon
+            onClick={() => dispatch({ type: CLEAR_ALL_FILTERS })}
+          >
+            <AiOutlineClear className="mr-2" /> Clear
           </ActiveButton>
 
           <FormControlLabel
@@ -213,28 +242,30 @@ export default function ActiveDataGrid({
             onChange={(_event, checked) => {
               dispatch({ type: ACTIVE_ONLY, checked });
             }}
-            checked={_payload.onlyActive}
+            checked={payload.onlyActive}
             sx={{ paddingLeft: 2 }}
           />
-          <ActiveButton
-            outline
-            rounded
-            danger
-            onClick={() => dispatch({ type: CLEAR_ALL_FILTERS })}
-          >
-            <AiOutlineClear className="mr-2" /> Clear
-          </ActiveButton>
-          {props.loading ? (
-            <GoSync className="animate-spin active-spin" />
+
+          {/* {props.loading ? (
+            <GoSync className="animate-spin active-spin text-gray-900" />
           ) : (
-            <GoSync className="active-spin" />
+            <GoSync className="active-spin text-gray-400" />
+          )} */}
+          {!props.error && !props.loading && (
+            <IoSyncSharp className="active-spin text-green-600" />
+          )}
+          {props.loading && (
+            <IoSyncSharp className="animate-spin active-spin text-gray-600" />
+          )}
+          {props.error && !props.loading && (
+            <IoSyncSharp className=" active-spin text-red-600" />
           )}
         </div>
       </div>
       {/* D A T A   G R I D */}
 
       <StripedDataGrid
-        sx={{ height: "520px" }}
+        sx={{ height: "520px", bgcolor: "white" }}
         columns={columns}
         rows={listResponse.content ? listResponse.content : []}
         rowCount={listResponse.count ? listResponse.count : 0}
@@ -245,15 +276,15 @@ export default function ActiveDataGrid({
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: _payload.ui_only.size,
-              page: _payload.ui_only.index,
+              pageSize: payload.ui_only.size,
+              page: payload.ui_only.index,
             },
           },
         }}
         pagination={true}
         paginationModel={{
-          page: _payload.ui_only.index,
-          pageSize: _payload.ui_only.size,
+          page: payload.ui_only.index,
+          pageSize: payload.ui_only.size,
         }}
         pageSizeOptions={[10, 20, 50]}
         paginationMode="server"
@@ -261,22 +292,28 @@ export default function ActiveDataGrid({
           dispatch({ type: PAGINATION, model })
         }
         sortingMode="server"
-        sortModel={deriveSortModel(_payload)}
+        sortModel={deriveSortModel(payload)}
         onSortModelChange={(model) => handleSort(model)}
         filterMode="server"
         // filterDebounceMs={5000}
-        filterModel={deriveFilterModel(_payload)}
+        filterModel={deriveFilterModel(payload)}
         // onFilterModelChange={(model) => handleFilter(model)}
         onRowSelectionModelChange={(model) => handleRowClick(model)}
       />
 
       <FilterModal
         FILTER_CONFIG={DRUGLIST_FILTER_OPTIONS}
-        filterModel={_payload.filter}
+        filterModel={payload.filter}
         onFilterChange={(model) => onFilterChange(model)}
         isOpen={filterOpen}
         onClose={() => setFilterOpen(false)}
       />
+      {/* <div className="btn-test">
+        <ImFilter className="mr-2" />
+        <ImFilter className="mr-2 animate-ping" />
+        <ImFilter className="mr-2 animate-pulse" />
+        <ImFilter className="mr-2 animate-bounce" />
+      </div> */}
     </div>
   );
 }

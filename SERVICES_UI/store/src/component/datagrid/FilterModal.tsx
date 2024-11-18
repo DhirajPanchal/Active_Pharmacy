@@ -44,16 +44,18 @@ const FilterModal = ({
   isOpen,
   onClose,
 }: FilterModalProps) => {
-  console.log("< FilterModal >");
+  // console.log("< FilterModal >");
 
   const [localFilterModel, setLocalFilterModel] = useState<any[]>(filterModel);
 
   const [filterForm, setFilterForm] = useState<FilterForm>(defaultFilterForm);
 
   useEffect(() => {
-    console.log("USE-EFFECT < FilterModal >");
+    console.log("< FilterModal > USE-EFFECT ");
+    console.log(localFilterModel);
+
     determineFieldOptions();
-  }, [localFilterModel]);
+  }, [filterModel, localFilterModel]);
 
   const determineFieldOptions = () => {
     let list: Option[] = [];
@@ -68,7 +70,7 @@ const FilterModal = ({
         list.push({ label: FC.label, value: FC.field });
       }
     });
-    console.log("list1 ", list);
+    // console.log("list1 ", list);
     setFilterForm((previous) => {
       return {
         ...previous,
@@ -80,7 +82,7 @@ const FilterModal = ({
   };
 
   const onFieldChange = (option: Option) => {
-    console.log(option);
+    // console.log(option);
     let list: Option[] = [];
     if (option) {
       FILTER_CONFIG.map((FC) => {
@@ -118,8 +120,8 @@ const FilterModal = ({
   };
 
   const addFilterHandler = () => {
-    console.log("ADD");
-    console.log(filterForm);
+    // console.log("ADD");
+    // console.log(filterForm);
 
     if (
       filterForm.selectedField.value !== "" &&
@@ -131,7 +133,7 @@ const FilterModal = ({
         operator: filterForm.selectedOperator.value,
         value: filterForm.selectedValue,
       };
-      console.log(newFilter);
+      // console.log(newFilter);
 
       setLocalFilterModel((previous) => {
         return [...previous, newFilter];
@@ -142,15 +144,14 @@ const FilterModal = ({
   };
 
   const applyFilterHandler = () => {
-    console.log("Apply Filter");
-    console.log(localFilterModel);
     if (onFilterChange) {
       onFilterChange(localFilterModel);
     }
+    setLocalFilterModel([]);
   };
 
   const genFiterItem = (fi: GridFilterItem, index: number) => {
-    console.log(" FI view : ", fi);
+    // console.log(" FI view : ", fi);
     let selectedFieldLabel: string = fi.field;
     FILTER_CONFIG.map((FC) => {
       if (FC.field === fi.field) {
@@ -212,8 +213,7 @@ const FilterModal = ({
             onChange={(event) => onSearchValueChange(event.target.value)}
           />
           <ActiveButton
-            outline
-            rounded
+            amazon
             className="text-black h-10"
             onClick={addFilterHandler}
           >
@@ -221,10 +221,8 @@ const FilterModal = ({
           </ActiveButton>
         </div>
         <div className="adg-filter-toolbar border-t-0 border-gray-400">
-          <ActiveButton outline rounded secondary onClick={onClose}>
-            Cancel
-          </ActiveButton>
-          <ActiveButton outline rounded warning onClick={applyFilterHandler}>
+          <ActiveButton onClick={onClose}>Cancel</ActiveButton>
+          <ActiveButton amazon onClick={applyFilterHandler}>
             Apply Filter
           </ActiveButton>
         </div>

@@ -10,29 +10,47 @@ body {
 }
 
 .adg-wrapper {
-  border: 1px solid lightgrey;
+  /* border: 1px solid lightgrey; */
   border-radius: 4px;
   padding: 8px;
 }
 .adg-header {
   display: flex;
   flex-direction: row;
-  padding: 0 2px 8px 0;
+  padding: 0px;
+  align-items: center;
+  /* background-color: lightblue; */
+  /* border: 1px solid; */
 }
 
 .adg-header-left-slot {
   display: flex;
   flex-direction: row;
   justify-content: start;
+  align-items: center;
   gap: 8px;
+  /* background-color: aquamarine; */
+  /* border: 1px solid; */
 }
 
 .adg-header-right-slot {
   display: flex;
   flex-grow: 1;
   justify-content: end;
-  gap: 8px;
+  gap: 12px;
+  /* background-color: gray; */
+  align-items: center;
+  padding-right: 8px;
+  margin-top: -8px;
+  /* border: 1px solid; */
 }
+
+.active-spin {
+  font-size: 48px;
+  margin-left: 8px;
+  margin-right: 4px;
+}
+
 .adg-filter {
   position: fixed;
   top: 0;
@@ -74,7 +92,7 @@ body {
   padding: 8px 12px 16px 12px;
 }
 
-.adg-filter-form{
+.adg-filter-form {
   display: flex;
   flex-direction: row;
   height: 68px;
@@ -85,7 +103,6 @@ body {
   gap: 8px;
   padding: 8px;
 }
-
 
 .adg-filter-view table {
   font-family: arial, sans-serif;
@@ -100,9 +117,12 @@ th {
   padding: 4px;
 }
 
-
 /* -------------------------------------------------------------------------------------------------------- */
 
-.active-spin{
-  font-size: 36px;
+.btn-test {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 16px;
 }
+

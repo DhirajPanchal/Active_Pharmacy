@@ -2,6 +2,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import {
   DEFAULT_LIST_PAYLOAD,
+  ListItem,
   ListPayload,
   ListResponse,
 } from "../model/list.model";
@@ -10,13 +11,13 @@ import { Drug } from "../model/Drug";
 
 const GATEWAY = "http://localhost:8021";
 
-const STORE_SERVICE_ROUTE = "";
+const STORE_SERVICE_ROUTE = "api/v1";
 
 axios.defaults.baseURL = `${GATEWAY}/${STORE_SERVICE_ROUTE}/`;
 
 axios.interceptors.request.use(
   (config) => {
-    //console.log("[OUTBOUND] __API (INV) " + config.method + " : " + config.url);
+    //// console.log("[OUTBOUND] __API (INV) " + config.method + " : " + config.url);
 
     config.headers["Content-Type"] = "application/json";
 
@@ -36,8 +37,8 @@ axios.interceptors.response.use(
   async (response) => {
     responseAnalysis(response);
 
-    // console.log("[INBOUND] __API (INV) RESPONSE", response.data);
-    // console.log(response);
+    // // console.log("[INBOUND] __API (INV) RESPONSE", response.data);
+    // // console.log(response);
     //toast.success("Success");
     return response;
   },
@@ -77,7 +78,7 @@ function responseAnalysis(response: AxiosResponse<any, any>) {
   // console.log("METHOD : ", response?.config?.method);
   // console.log("URL   : ", response?.config?.url);
   const objective: string = response?.config?.headers["OBJECTIVE_TAG"];
-  // console.log("objective   : ", objective);
+  // // console.log("objective   : ", objective);
   if (objective !== undefined && objective.trim().length > 0) {
     if (objective !== "X") {
       toast.success(objective);
@@ -90,13 +91,13 @@ function responseAnalysis(response: AxiosResponse<any, any>) {
     toast.success("Updated successful");
   } else if (response?.config?.method === "post") {
     if (response?.config?.url?.includes("/list")) {
-     // toast("Data grid refreshed");
+      // toast("Data grid refreshed");
     } else {
-      toast.success("Created successful");
+      //toast.success("Created successful");
     }
   }
 
-  // console.log("****************************************************");
+  // // console.log("****************************************************");
 }
 
 const request = {
@@ -130,14 +131,20 @@ const request = {
 
 //   *  *  *  *  *  *   D R U G   *  *  *  *  *  *
 
-const loadDrugList = (payload: ListPayload = DEFAULT_LIST_PAYLOAD) =>
-  request.post<ListResponse<Drug>>(
-    `api/v1/list/drug?index=${payload.ui_only.index}&size=${payload.ui_only.size}`,
+const loadDrugList = (payload: ListPayload = DEFAULT_LIST_PAYLOAD) => {
+  return request.post<ListResponse<Drug>>(
+    `list/drug?index=${payload.ui_only.index}&size=${payload.ui_only.size}`,
     payload
   );
+};
+
+const loadProvider = (type: string, search: string = "") => {
+  return request.get<ListItem>(`list/provider?type=${type}&search=${search}`);
+};
 
 const ExternalInterface = {
   loadDrugList,
+  loadProvider,
 };
 
 export default ExternalInterface;
