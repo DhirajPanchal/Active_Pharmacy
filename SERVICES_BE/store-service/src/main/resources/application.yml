@@ -1,3 +1,6 @@
+
+#   S T O R E - S E R V I C E
+
 server:
   port: 8021
 
@@ -8,7 +11,3 @@ spring:
     url: "r2dbc:mysql://localhost:3306/active_pharmacy_v01"
     username: root
     password: Test12345
-
-# R2DBC URL
-#r2dbc:
-#  url: r2dbc:h2:mem://./testdb
