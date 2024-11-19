@@ -1,0 +1,19 @@
+
+#   I N V E N T O R Y - S E R V I C E
+
+server:
+  port: 8022
+
+spring:
+  application:
+    name: inventory-inventory
+  datasource:
+    url: "jdbc:mysql://localhost:3306/active_pharmacy_v01"
+    username: root
+    password: Test12345
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true

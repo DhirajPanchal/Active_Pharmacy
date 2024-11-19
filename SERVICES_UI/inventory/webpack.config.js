@@ -9,7 +9,7 @@ const printCompilationMessage = require('./compilation.config.js');
 
 module.exports = (_, argv) => ({
   output: {
-    publicPath: "http://localhost:8000/",
+    publicPath: "http://localhost:8002/",
   },
 
   resolve: {
@@ -17,7 +17,7 @@ module.exports = (_, argv) => ({
   },
 
   devServer: {
-    port: 8000,
+    port: 8002,
     historyApiFallback: true,
     watchFiles: [path.resolve(__dirname, 'src')],
     onListening: function (devServer) {
@@ -62,13 +62,12 @@ module.exports = (_, argv) => ({
 
   plugins: [
     new ModuleFederationPlugin({
-      name: "container",
+      name: "inventory",
       filename: "remoteEntry.js",
-      remotes: {
-        store: "store@http://localhost:8001/remoteEntry.js",
-        inventory: "inventory@http://localhost:8002/remoteEntry.js"
+      remotes: {},
+      exposes: {
+        "./InventoryApp": "./src/App",
       },
-      exposes: {},
       shared: {
         ...deps,
         react: {

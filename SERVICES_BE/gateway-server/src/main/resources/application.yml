@@ -1,7 +1,7 @@
 #   G A T E W A Y - S E R V E R
 
 server:
-  port: 8020
+  port: 8010
 
 spring:
   application:
