@@ -1,8 +1,8 @@
 ![N|Solid](https://raw.githubusercontent.com/DhirajPanchal/KART_V01_CONFIG/main/activeRx_Pharmacy_c02.png) 
 
 ### Prototypal pharmacy store and back operations.
-#### Backend :: Springboot (Spring WebFlux) based Microservices.
-#### Frontend :: React & Angular based Microfrontend.
+#### BE: Springboot (Spring WebFlux) based Microservices.
+#### FE: React & Angular based Microfrontends.
 
 Maintained by:
 
