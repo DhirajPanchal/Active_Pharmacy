@@ -1,12 +1,20 @@
-
+#
+#
 #   I N V E N T O R Y - S E R V I C E
-
+#
+#
 server:
-  port: 8022
+  port: 8011
+
+info:
+  app:
+    name: "inventory-service"
+    description: "Active Pharmacy - Inventory Service"
+    version: "1.0.0"
 
 spring:
   application:
-    name: inventory-inventory
+    name: inventory-service
   datasource:
     url: "jdbc:mysql://localhost:3306/active_pharmacy_v01"
     username: root
@@ -17,3 +25,12 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8020/eureka/

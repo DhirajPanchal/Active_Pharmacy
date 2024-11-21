@@ -1,13 +1,40 @@
-
+#
+#
 #   S T O R E - S E R V I C E
-
+#
+#
 server:
-  port: 8021
+  port: 8012
+
+info:
+  app:
+    name: "store-service"
+    description: "Active Pharmacy - Store Service"
+    version: "1.0.0"
 
 spring:
   application:
-    name: store-inventory
+    name: store-service
   r2dbc:
     url: "r2dbc:mysql://localhost:3306/active_pharmacy_v01"
     username: root
     password: Test12345
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8020/eureka/
+
+
+
+
+
+
+
+
+
+

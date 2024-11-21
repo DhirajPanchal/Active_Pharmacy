@@ -65,8 +65,8 @@ module.exports = (_, argv) => ({
       name: "container",
       filename: "remoteEntry.js",
       remotes: {
-        store: "store@http://localhost:8001/remoteEntry.js",
-        inventory: "inventory@http://localhost:8002/remoteEntry.js"
+        store: "store@http://localhost:8002/remoteEntry.js",
+        inventory: "inventory@http://localhost:8001/remoteEntry.js"
       },
       exposes: {},
       shared: {

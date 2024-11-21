@@ -11,9 +11,11 @@ import { Drug } from "../model/Drug";
 
 const GATEWAY = "http://localhost:8021";
 
-const STORE_SERVICE_ROUTE = "api/v1";
+const STORE_SERVICE_ROUTE = "active-pharmacy/store";
 
-axios.defaults.baseURL = `${GATEWAY}/${STORE_SERVICE_ROUTE}/`;
+const API_VERSION = "api/v1";
+
+axios.defaults.baseURL = `${GATEWAY}/${STORE_SERVICE_ROUTE}/${API_VERSION}/`;
 
 axios.interceptors.request.use(
   (config) => {

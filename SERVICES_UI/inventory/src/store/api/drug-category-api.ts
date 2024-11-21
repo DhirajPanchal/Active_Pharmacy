@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const drugCategoryApi = createApi({
   reducerPath: "drugcategory",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8022/api/v1/drug-category",
+    baseUrl: "http://localhost:8022/active-pharmacy/inventory/api/v1/drug-category",
   }),
   endpoints(builder) {
     return {
