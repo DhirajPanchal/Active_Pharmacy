@@ -1,4 +1,4 @@
-package io.active.pharmacy.gateway.web;
+package io.active.pharmacy.gateway.controller;
 
 import org.springframework.web.bind.annotation.*;
 
