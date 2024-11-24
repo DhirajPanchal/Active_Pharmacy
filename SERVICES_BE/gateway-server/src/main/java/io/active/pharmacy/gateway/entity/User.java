@@ -36,6 +36,6 @@ public class User {
     private String password;
 
     public List<String> getRoles() {
-        return List.of("REGULAR");
+        return List.of("ROLE_ADMIN");
     }
 }

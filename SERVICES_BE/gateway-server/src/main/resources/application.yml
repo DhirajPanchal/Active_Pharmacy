@@ -30,9 +30,12 @@ spring:
 #      defaultZone: http://localhost:8020/eureka/
 
 jwt:
-  token-expiration-seconds: 1800
+  token-expiration-seconds: 600
   secret-key: "Vr3snA4K8Mfihp4twIHdxc0Vym+v7e7jlBgyZRBjZMM1yjKOvs24++a3AxBLrrCQ9KmXRfhxcl2KlNGmblD+eA=="
 
 
 #  https://www.javainuse.com/jwtgenerator
 #  HS256  javainuse-secret-key
+
+
+# spring.webflux.problemdetails.enabled=true

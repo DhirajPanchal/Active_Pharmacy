@@ -7,21 +7,21 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Configuration
+//@Configuration
 class UserDetailsConfig {
 
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    MapReactiveUserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        var user = User.builder()
-                .username("dhiraj")
-                .password(passwordEncoder().encode("password"))
-                .roles("USER")
-                .build();
-        return new MapReactiveUserDetailsService(user);
-    }
+//    @Bean
+//    PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
+//
+//    @Bean
+//    MapReactiveUserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+//        var user = User.builder()
+//                .username("dhiraj")
+//                .password(passwordEncoder().encode("password"))
+//                .roles("USER")
+//                .build();
+//        return new MapReactiveUserDetailsService(user);
+//    }
 }

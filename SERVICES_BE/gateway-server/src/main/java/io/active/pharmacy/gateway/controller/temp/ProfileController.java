@@ -11,18 +11,18 @@ import reactor.core.publisher.Mono;
 
 import java.util.stream.Collectors;
 
-@RestController
-@RequiredArgsConstructor
+//@RestController
+//@RequiredArgsConstructor
 public class ProfileController {
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    @GetMapping("/profile")
-    Mono<ProfileResponse> getProfile(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        return Mono.just(new ProfileResponse(user.getUsername(), user.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .map(name -> name.substring("ROLE_".length()))
-                .collect(Collectors.toSet())
-        ));
-    }
+//    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+//    @GetMapping("/XXX/profile")
+//    Mono<ProfileResponse> getProfile(Authentication authentication) {
+//        User user = (User) authentication.getPrincipal();
+//        return Mono.just(new ProfileResponse(user.getUsername(), user.getAuthorities().stream()
+//                .map(GrantedAuthority::getAuthority)
+//                .map(name -> name.substring("ROLE_".length()))
+//                .collect(Collectors.toSet())
+//        ));
+//    }
 }

@@ -11,20 +11,20 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
-@RestController
-@RequiredArgsConstructor
+//@RestController
+//@RequiredArgsConstructor
 public class LoginController {
 
-    private final PasswordEncoder passwordEncoder;
-    private final ReactiveUserDetailsService userDetailsService;
-    private final TokenProvider tokenProvider;
-
-    @PostMapping("/login")
-    Mono<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        return userDetailsService.findByUsername(loginRequest.username())
-                .filter(u -> passwordEncoder.matches(loginRequest.password(), u.getPassword()))
-                .map(tokenProvider::generateToken)
-                .map(LoginResponse::new)
-                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED)));
-    }
+//    private final PasswordEncoder passwordEncoder;
+//    private final ReactiveUserDetailsService userDetailsService;
+//    private final TokenProvider tokenProvider;
+//
+//    @PostMapping("/api/v1/auth/XXXXX/login")
+//    Mono<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+//        return userDetailsService.findByUsername(loginRequest.username())
+//                .filter(u -> passwordEncoder.matches(loginRequest.password(), u.getPassword()))
+//                .map(tokenProvider::generateToken)
+//                .map(LoginResponse::new)
+//                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED)));
+//    }
 }
