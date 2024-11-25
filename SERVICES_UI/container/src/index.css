@@ -5,9 +5,16 @@
 
 body {
   font-family: "Lato", serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .logo-image{
   width: 216px;
   height: 61.2px;
+}
+
+.keycload-image{
+  width: 137.5px;
+  height: 91px;
 }

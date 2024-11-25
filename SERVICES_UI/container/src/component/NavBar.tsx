@@ -1,38 +1,90 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { IUser } from "../model/IUser";
 
-type OptionType = { label: string; action: string };
+type OptionType = { label: string; route: string; action?: string };
 
-const options: OptionType[] = [
-  //   { label: "Login", action: "login" },
-  //   { label: "Logout", action: "logout" },
-  //   { label: "Profile", action: "profile" },
+const GUEST_OPTIONS: OptionType[] = [
+  { label: "L O G I N", route: "/login" },
+  { label: "R E G I S T R A T I O N", route: "/registration" },
+  { label: "S T O R E", route: "/store" },
+  { label: "P R O F I L E", route: "/profile" },
 ];
 
-export default function NavBar() {
-  const [openMenu, setOpenMenu] = useState<boolean>(true);
+const USER_AUTH_OPTIONS: OptionType[] = [
+  { label: "P R O F I L E", route: "/profile" },
+  { label: "S T O R E", route: "/store" },
+  { label: "L O G O U T", route: "/", action: "logout" },
+];
+
+const BUSINESS_AUTH_OPTIONS: OptionType[] = [
+  { label: "P R O F I L E", route: "/profile" },
+  { label: "S T O R E", route: "/store" },
+  { label: "I N V E N T O R Y", route: "/inventory" },
+  { label: "L O G O U T", route: "/", action: "logout" },
+];
+
+type NavBarProps = {
+  isAuthenticated: boolean;
+  pricipal?: IUser;
+  onLogout: () => void;
+};
+
+export default function NavBar({
+  isAuthenticated = false,
+  pricipal,onLogout
+}: NavBarProps) {
+  const navigation = useNavigate();
+  const [openMenu, setOpenMenu] = useState<boolean>(false);
+  const [options, setOptions] = useState<OptionType[]>(GUEST_OPTIONS);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      if (pricipal?.business) {
+        setOptions(BUSINESS_AUTH_OPTIONS);
+      } else {
+        setOptions(USER_AUTH_OPTIONS);
+      }
+    }
+  }, [isAuthenticated, pricipal]);
 
   const handleSearch = () => {
     console.log("_handleSearch");
+    toast.success("Created successful");
   };
 
   const handleMenu = () => {
     console.log("_handleMenu");
+    if (options.length == 0) {
+      navigation("/login");
+    }
     setOpenMenu((pre) => !pre);
   };
 
   const optionHandle = (option: OptionType) => {
-    console.log("_optionHandle : " + option.action);
+    console.log("_optionHandle : " + option.route);
+    if (option?.action === "logout") {
+      onLogout();
+    }
+    if (option.route && option.route !== "") {
+      navigation(option.route);
+    }
     setOpenMenu((pre) => !pre);
   };
 
   return (
-    <nav className=" bg-white w-full flex relative justify-between items-center mx-auto px-8 h-20">
+    <nav className=" bg-white w-full flex relative justify-between items-center mx-auto px-8 h-32 border-b-4 border-dashed border-gray-200 ">
       {/* Logo */}
 
       <div className="inline-flex">
-        <a className="_o6689fn" href="/">
+        <a className="_o6689fn">
           <div className="hidden md:block">
-            <img src="/activeRx_Pharmacy_c02.png" alt="Logo" />
+            <img
+              src="/activeRx_Pharmacy_c02.png"
+              alt="Logo"
+              className="logo-image"
+            />
           </div>
           <div className="block md:hidden">
             <img src="/activeRx_Pharmacy_c02.png" alt="Logo" />
@@ -44,7 +96,7 @@ export default function NavBar() {
 
       {/* Search Bar  */}
 
-      <div className="hidden sm:block flex-shrink flex-grow-0 justify-start px-2 w-80">
+      <div className="hidden sm:block flex-shrink flex-grow-0 justify-start px-2 w-1/3">
         <div className="inline-block w-full ">
           <div className="inline-flex items-center w-full max-w-full  ">
             <button
@@ -54,8 +106,8 @@ export default function NavBar() {
             >
               <input
                 type="text"
-                placeholder="search drug"
-                className="border-none w-full h-fit"
+                placeholder=" drug search"
+                className="border-none w-full h-fit align-middle text-center"
               />
               <div className="flex items-center justify-center relative  h-8 w-8 rounded-full">
                 <svg
@@ -78,24 +130,25 @@ export default function NavBar() {
 
       {/* Search Bar end */}
 
-      {/* Login */}
+      {/* Avatar */}
 
       <div className="flex-initial">
         <div className="flex justify-end items-center relative">
           <div className="flex mr-4 items-center">
+            {pricipal?.firstName}
             {/* <a
               className="inline-block py-2 px-3 hover:bg-gray-200 rounded-full"
-              href="#"
             >
               LINK
             </a> */}
+            <b> {isAuthenticated} </b>
           </div>
 
           <div className="block w-32 ">
             <div className="inline relative float-end">
               <button
                 type="button"
-                className="inline-flex items-center relative px-2 rounded-full hover:shadow-lg hover:bg-green-100 border-2"
+                className="inline-flex items-center relative px-2 rounded-full hover:shadow-lg hover:bg-blue-100 border-2"
                 onClick={handleMenu}
               >
                 <div className="pl-1">
@@ -131,7 +184,7 @@ export default function NavBar() {
             </div>
 
             {openMenu && (
-              <ul className="absolute z-[1000] right-0 top-12 m-0 list-none overflow-hidden rounded-lg border-none bg-clip-padding text-center text-base shadow-2xl data-[twe-dropdown-show]:block dark:bg-surface-dark w-32 min-w-max bg-green-100">
+              <ul className="absolute z-[1000] right-0 top-12 m-0 list-none overflow-hidden rounded-lg border-none bg-clip-padding text-center text-base shadow-2xl data-[twe-dropdown-show]:block dark:bg-surface-dark w-32 min-w-max bg-blue-100">
                 {options.map((option, index) => (
                   <li key={index}>
                     <a
@@ -148,7 +201,7 @@ export default function NavBar() {
         </div>
       </div>
 
-      {/* Login end */}
+      {/* Avatar end */}
     </nav>
   );
 }
