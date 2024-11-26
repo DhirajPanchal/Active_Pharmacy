@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ExternalInterface from "../service/ExternalInterface";
 import { useNavigate } from "react-router-dom";
+import { IRegistration } from "../model/auth.model";
 
 const defaultFormData: IRegistration = {
   email: "",

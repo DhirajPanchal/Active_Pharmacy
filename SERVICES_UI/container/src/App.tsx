@@ -9,9 +9,10 @@ import NotFound from "./component/NotFound";
 import Profile from "./component/Profile";
 import Home from "./component/Home";
 import ExternalInterface from "./service/ExternalInterface";
-import { IUser } from "./model/IUser";
+import { IUser } from "./model/auth.model";
 
-// const StoreRemoteApp = React.lazy(() => import("store/StoreApp"));
+
+const StoreRemoteApp = React.lazy(() => import("store/StoreApp"));
 // const InventoryRemoteApp = React.lazy(() => import("inventory/InventoryApp"));
 
 function App() {
@@ -29,21 +30,10 @@ function App() {
     }
 
     ExternalInterface.userProfile().then((data: any) => {
-      console.log("DATA :::");
-      console.log(data);
-
-      const user: IUser = {
-        firstName: data?.user?.firstName,
-        lastName: data?.user?.lastName,
-        email: data?.user?.email,
-        id: data?.user?.id,
-        roles: data?.roles,
-        business: false,
-      };
+      console.log("userProfile :::");
       console.log(" pricipal :: ");
-      console.log(user);
-
-      setPrincipal(user);
+      console.log(data);
+      setPrincipal(data);
     });
   };
 
@@ -74,8 +64,8 @@ function App() {
               path="/login"
               element={<Login onLogin={(token) => handleLogin(token)} />}
             />
-            {/* <Route path="/store/*" element={<StoreRemoteApp />} />
-          <Route path="/inventory/*" element={<InventoryRemoteApp />} /> */}
+            <Route path="/store/*" element={<StoreRemoteApp />} />
+          {/* <Route path="/inventory/*" element={<InventoryRemoteApp />} /> */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

@@ -3,7 +3,6 @@ package io.active.pharmacy.gateway.controller;
 
 import io.active.pharmacy.gateway.dto.LoginRequest;
 import io.active.pharmacy.gateway.dto.LoginResponse;
-import io.active.pharmacy.gateway.dto.ProfileResponse;
 import io.active.pharmacy.gateway.dto.UserDto;
 import io.active.pharmacy.gateway.entity.User;
 import io.active.pharmacy.gateway.service.AuthService;
@@ -50,9 +49,9 @@ public class AuthController {
     }
 
     @GetMapping("/profile")
-    Mono<ProfileResponse> getProfile(Authentication authentication) {
+    Mono<UserDto> getProfile(Authentication authentication) {
 
-        Mono<ProfileResponse> response = this.service.profile(authentication);
+        Mono<UserDto> response = this.service.profile(authentication);
 
         return response;
 

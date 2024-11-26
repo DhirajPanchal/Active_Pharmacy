@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { IUser } from "../model/IUser";
+import { IUser } from "../model/auth.model";
 
 type OptionType = { label: string; route: string; action?: string };
 
@@ -18,7 +18,13 @@ const USER_AUTH_OPTIONS: OptionType[] = [
   { label: "L O G O U T", route: "/", action: "logout" },
 ];
 
-const BUSINESS_AUTH_OPTIONS: OptionType[] = [
+const OPERATION_AUTH_OPTIONS: OptionType[] = [
+  { label: "P R O F I L E", route: "/profile" },
+  { label: "I N V E N T O R Y", route: "/inventory" },
+  { label: "L O G O U T", route: "/", action: "logout" },
+];
+
+const SUPER_AUTH_OPTIONS: OptionType[] = [
   { label: "P R O F I L E", route: "/profile" },
   { label: "S T O R E", route: "/store" },
   { label: "I N V E N T O R Y", route: "/inventory" },
@@ -33,7 +39,8 @@ type NavBarProps = {
 
 export default function NavBar({
   isAuthenticated = false,
-  pricipal,onLogout
+  pricipal,
+  onLogout,
 }: NavBarProps) {
   const navigation = useNavigate();
   const [openMenu, setOpenMenu] = useState<boolean>(false);
@@ -41,11 +48,15 @@ export default function NavBar({
 
   useEffect(() => {
     if (isAuthenticated) {
-      if (pricipal?.business) {
-        setOptions(BUSINESS_AUTH_OPTIONS);
-      } else {
+      if (pricipal?.role === "ROLE_USER") {
         setOptions(USER_AUTH_OPTIONS);
+      } else if (pricipal?.role === "ROLE_OPRATION") {
+        setOptions(OPERATION_AUTH_OPTIONS);
+      } else if (pricipal?.role === "ROLE_SUPER") {
+        setOptions(SUPER_AUTH_OPTIONS);
       }
+    } else {
+      setOptions(GUEST_OPTIONS);
     }
   }, [isAuthenticated, pricipal]);
 
@@ -74,7 +85,7 @@ export default function NavBar({
   };
 
   return (
-    <nav className=" bg-white w-full flex relative justify-between items-center mx-auto px-8 h-32 border-b-4 border-dashed border-gray-200 ">
+    <nav className=" bg-white w-full flex relative justify-between items-center mx-auto px-8 h-32 border-b-0 border-dashed border-gray-200 ">
       {/* Logo */}
 
       <div className="inline-flex">
@@ -135,13 +146,13 @@ export default function NavBar({
       <div className="flex-initial">
         <div className="flex justify-end items-center relative">
           <div className="flex mr-4 items-center">
-            {pricipal?.firstName}
+            {/* {pricipal?.firstName} */}
             {/* <a
               className="inline-block py-2 px-3 hover:bg-gray-200 rounded-full"
             >
               LINK
             </a> */}
-            <b> {isAuthenticated} </b>
+            {/* <b> {isAuthenticated} </b> */}
           </div>
 
           <div className="block w-32 ">

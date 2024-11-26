@@ -9,7 +9,7 @@ import {
 import { toast } from "react-toastify";
 import { Drug } from "../model/Drug";
 
-const GATEWAY = "http://localhost:8021";
+const GATEWAY = "http://localhost:8010";
 
 const STORE_SERVICE_ROUTE = "active-pharmacy/store";
 
@@ -19,14 +19,14 @@ axios.defaults.baseURL = `${GATEWAY}/${STORE_SERVICE_ROUTE}/${API_VERSION}/`;
 
 axios.interceptors.request.use(
   (config) => {
-    //// console.log("[OUTBOUND] __API (INV) " + config.method + " : " + config.url);
+    console.log("[OUTBOUND] __API (INV) " + config.method + " : " + config.url);
 
     config.headers["Content-Type"] = "application/json";
 
-    // const token = sessionStorage.getItem("TOKEN");
-    // if (token) {
-    //   config.headers["Authorization"] = `Bearer ${token}`;
-    // }
+    const token = sessionStorage.getItem("TOKEN");
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
 
     return config;
   },
@@ -83,14 +83,14 @@ function responseAnalysis(response: AxiosResponse<any, any>) {
   // // console.log("objective   : ", objective);
   if (objective !== undefined && objective.trim().length > 0) {
     if (objective !== "X") {
-      toast.success(objective);
+      //toast.success(objective);
     }
 
     return;
   }
 
   if (response?.config?.method === "put") {
-    toast.success("Updated successful");
+    //toast.success("Updated successful");
   } else if (response?.config?.method === "post") {
     if (response?.config?.url?.includes("/list")) {
       // toast("Data grid refreshed");

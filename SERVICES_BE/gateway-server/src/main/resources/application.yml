@@ -20,17 +20,17 @@ spring:
     username: root
     password: Test12345
 
-#eureka:
-#  instance:
-#    preferIpAddress: true
-#  client:
-#    fetchRegistry: true
-#    registerWithEureka: true
-#    serviceUrl:
-#      defaultZone: http://localhost:8020/eureka/
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8020/eureka/
 
 jwt:
-  token-expiration-seconds: 600
+  token-expiration-seconds: 1800
   secret-key: "Vr3snA4K8Mfihp4twIHdxc0Vym+v7e7jlBgyZRBjZMM1yjKOvs24++a3AxBLrrCQ9KmXRfhxcl2KlNGmblD+eA=="
 
 

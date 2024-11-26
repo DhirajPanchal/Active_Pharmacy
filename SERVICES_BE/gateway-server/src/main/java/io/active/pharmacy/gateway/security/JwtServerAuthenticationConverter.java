@@ -30,6 +30,8 @@ class JwtServerAuthenticationConverter implements ServerAuthenticationConverter 
 
     private UserDetails createUserDetails(String token) {
         String username = jwtService.extractUsername(token);
+        System.out.println("_USERNAME : " + username);
+
         return User.builder()
                 .username(username)
                 .authorities(createAuthorities(token))
@@ -39,7 +41,11 @@ class JwtServerAuthenticationConverter implements ServerAuthenticationConverter 
 
     private List<SimpleGrantedAuthority> createAuthorities(String token) {
         return jwtService.extractRoles(token).stream()
-                .map(role -> "ROLE_" + role)
+                .map(role -> {
+                            System.out.println("_ROLE     : " + role);
+                            return "ROLE_" + role;
+                        }
+                )
                 .map(SimpleGrantedAuthority::new)
                 .toList();
     }

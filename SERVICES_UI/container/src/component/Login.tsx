@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { ILogin } from "../model/ILogin";
+
 import ExternalInterface from "../service/ExternalInterface";
+import { ILogin } from "../model/auth.model";
 
 const defaultFormData: ILogin = {
   username: "",

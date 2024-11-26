@@ -41,7 +41,8 @@ class SecurityConfig {
         return http
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(path("registration", "login")).permitAll()
-                        .pathMatchers(path("inventory")).hasRole("ADMIN")
+                        .pathMatchers("/active-pharmacy/store/**").hasAnyRole("USER", "SUPER")
+                        .pathMatchers("/active-pharmacy/inventory/**").hasAnyRole("OPERATION", "SUPER")
                         .anyExchange().authenticated()
                 )
                 .addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
@@ -73,7 +74,7 @@ class SecurityConfig {
         return username -> users.findByEmail(username)
                 .map(u -> User
                         .withUsername(u.getEmail()).password(u.getPassword())
-                        .authorities(getAuthorities(u.getRoles()))
+                        .authorities(getSingleAuthority(u.getRole()))
                         .accountExpired(false)
                         .credentialsExpired(false)
                         .disabled(false)
@@ -81,6 +82,14 @@ class SecurityConfig {
                         .build()
                 );
     }
+
+
+    private List<GrantedAuthority> getSingleAuthority(final String privilege) {
+        final List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(privilege));
+        return authorities;
+    }
+
 
     private List<GrantedAuthority> getAuthorities(final List<String> privileges) {
         final List<GrantedAuthority> authorities = new ArrayList<>();

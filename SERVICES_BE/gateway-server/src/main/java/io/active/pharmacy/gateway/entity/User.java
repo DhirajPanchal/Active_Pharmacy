@@ -25,18 +25,23 @@ public class User {
     @Column("email")
     private String email;
 
+    @Column("role")
+    private String role;
+
     @Column("first_name")
     private String firstName;
 
     @Column("last_name")
     private String lastName;
 
+    @Column("phone_number")
+    private String phoneNumber;
+
+    @Column("address_id")
+    private Long addressId;
+
     @Column("password")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    public List<String> getRoles() {
-        return List.of("ROLE_USER");
-    }
 }

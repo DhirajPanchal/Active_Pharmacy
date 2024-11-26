@@ -19,4 +19,11 @@ public class Drug extends BaseEntity {
 
     }
 
+    public Drug(String name, long category_id, String category_name, long class_id, String class_name) {
+        this.setName(name);
+        this.category_id = category_id;
+        this.category_name = category_name;
+        this.class_id = class_id;
+        this.class_name = class_name;
+    }
 }

@@ -1,7 +1,7 @@
 //ExternalInterface
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
-import { ILogin } from "../model/ILogin";
+import { ILogin, IRegistration, IUser } from "../model/auth.model";
 
 const GATEWAY = "http://localhost:8010";
 
@@ -138,7 +138,7 @@ const userRegistration = (payload: IRegistration) => {
 };
 
 const userProfile = () => {
-  return request.get(`/auth/profile`);
+  return request.get<IUser>(`/auth/profile`);
 };
 
 const ExternalInterface = {

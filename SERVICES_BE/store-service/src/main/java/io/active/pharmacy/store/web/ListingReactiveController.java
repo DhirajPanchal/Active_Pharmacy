@@ -18,15 +18,15 @@ import java.util.List;
 
 import static io.active.pharmacy.store.constant.RestConstants.*;
 
-@CrossOrigin(
-        origins = {
-                "http://localhost:8000",
-                "http://localhost:8001",
-        },
-        methods = {
-                RequestMethod.POST,
-                RequestMethod.GET
-        })
+//@CrossOrigin(
+//        origins = {
+//                "http://localhost:8000",
+//                "http://localhost:8001",
+//        },
+//        methods = {
+//                RequestMethod.POST,
+//                RequestMethod.GET
+//        })
 @Slf4j
 @RestController
 @RequestMapping("api/v1/list")
