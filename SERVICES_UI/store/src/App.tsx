@@ -8,10 +8,7 @@ import { appStore } from "./store/store";
 
 const App = () => (
   <Provider store={appStore}>
-    <div className="flex justify-center mt-16">
-      {/* <header className="bg-blue-0 h-20 p-6 border-b-2 border-b-blue-640 border-dashed ">
-        <h1 className="font-bold">STORE</h1>
-      </header> */}
+    <div className="flex justify-center">
 
       <DrugList />
 

@@ -27,9 +27,8 @@ import ActiveButton from "../../control/ActiveButton";
 import { FormControlLabel, Switch } from "@mui/material";
 import FilterModal, { FilterItem } from "./FilterModal";
 import { DRUGLIST_FILTER_OPTIONS } from "../../page/drug-list/drug-list-helper";
-import { GoSync } from "react-icons/go";
-import { IoSyncSharp } from "react-icons/io5";
 import { ImFilter } from "react-icons/im";
+import BusySpinner from "../../control/BusySpinner";
 
 type ActiveDataGridProps = {
   columns: GridColDef[];
@@ -57,6 +56,7 @@ export default function ActiveDataGrid({
   };
 
   useEffect(() => {
+    console.log(" < ActiveDataGrid > useEffect ");
     if (triggerRefresh) {
       triggerRefresh(payload);
     }
@@ -114,14 +114,7 @@ export default function ActiveDataGrid({
         break;
       }
     }
-    // // console.log("Payload Changed ", cache);
-    // if (cache && triggerRefresh) {
-    //triggerRefresh(cache);
 
-    //   return cache;
-    // } else {
-    //   return state;
-    // }
     return cache;
   }
 
@@ -245,21 +238,12 @@ export default function ActiveDataGrid({
             checked={payload.onlyActive}
             sx={{ paddingLeft: 2 }}
           />
+            <BusySpinner
+              isLoading={props.loading}
+              isError={props.error}
+              className="float-right"
+            />
 
-          {/* {props.loading ? (
-            <GoSync className="animate-spin active-spin text-gray-900" />
-          ) : (
-            <GoSync className="active-spin text-gray-400" />
-          )} */}
-          {!props.error && !props.loading && (
-            <IoSyncSharp className="active-spin text-green-600" />
-          )}
-          {props.loading && (
-            <IoSyncSharp className="animate-spin active-spin text-gray-600" />
-          )}
-          {props.error && !props.loading && (
-            <IoSyncSharp className=" active-spin text-red-600" />
-          )}
         </div>
       </div>
       {/* D A T A   G R I D */}

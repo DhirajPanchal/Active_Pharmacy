@@ -19,15 +19,17 @@ axios.defaults.baseURL = `${GATEWAY}/${STORE_SERVICE_ROUTE}/${API_VERSION}/`;
 
 axios.interceptors.request.use(
   (config) => {
-    console.log("[OUTBOUND] __API (INV) " + config.method + " : " + config.url);
+    console.log(
+      "[OUTBOUND] __API (STORE) " + config.method + " : " + config.url
+    );
 
     config.headers["Content-Type"] = "application/json";
-
-    const token = sessionStorage.getItem("TOKEN");
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+    if (config.url !== "/auth/login" && config.url != "/auth/registration") {
+      const token = sessionStorage.getItem("TOKEN");
+      if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
     }
-
     return config;
   },
   (error) => {

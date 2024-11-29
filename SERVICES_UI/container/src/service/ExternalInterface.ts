@@ -13,12 +13,15 @@ axios.defaults.baseURL = `${GATEWAY}${GATEWAY_SERVICE_ROUTE}${API_VERSION}`;
 
 axios.interceptors.request.use(
   (config) => {
-    console.log("[OUTBOUND] __API (INV) " + config.method + " : " + config.url);
+    console.log("[OUTBOUND] __API (CON) " + config.method + " : " + config.url);
 
     config.headers["Content-Type"] = "application/json";
-    const token = sessionStorage.getItem("TOKEN");
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+
+    if (config.url !== "/auth/login" && config.url !="/auth/registration") {
+      const token = sessionStorage.getItem("TOKEN");
+      if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
     }
 
     return config;
@@ -39,28 +42,15 @@ axios.interceptors.response.use(
   },
   (error: AxiosError) => {
     const { status, statusText } = error.response!;
+    console.log("-------------------------------------------");
     console.error(
       "[INBOUND] __API (INV) ERROR :: " + status + " :: " + statusText
     );
+    console.log("_ EI error");
+    console.error(error);
+    console.log("_ EI error response");
     console.error(error.response);
-    //toast.error(`ERROR ${status} : ${statusText}`);
-    // switch (status) {
-    //   case 400:
-    //     console.warn("__API (INV) ERROR - 400 ");
-    //     break;
-    //   case 401:
-    //     console.warn("__API (INV) ERROR - 401 Unauthorized ");
-    //     break;
-    //   case 404:
-    //     console.warn("__API (INV) ERROR - 404");
-    //     break;
-    //   case 500:
-    //     console.warn("__API (INV) ERROR - 500 Server Error");
-    //     break;
-    //   default:
-    //     console.warn("__API (INV) ERROR - Unknown");
-    //     break;
-    // }
+    console.log("-------------------------------------------");
     return Promise.reject(error);
   }
 );

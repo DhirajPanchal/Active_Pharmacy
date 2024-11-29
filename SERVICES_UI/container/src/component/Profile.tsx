@@ -1,26 +1,22 @@
-import React from "react";
-import { IUser } from "../model/auth.model";
+import React, { useEffect } from "react";
+import { shallowEqual } from "react-redux";
+import { appSelector, useThunk } from "../store/hooks";
+import { userProfile } from "../store/store";
 
-type ProfileProps = {
-  pricipal?: IUser;
-};
+export default function Profile() {
+  const [doProfile, isLoading, error] = useThunk(userProfile);
 
-export default function Profile({ pricipal }: ProfileProps) {
-  function renderAddress(pricipal: IUser): React.ReactNode {
-    let content: any;
-    if (pricipal && pricipal.address) {
-      //content = {pricipal.address.address1 } <br /> {pricipal.address.address2}
-    }
+  const [isAuthenticated, pricipal] = appSelector((state) => {
+    return [state.auth.isAuthenticated, state.auth.pricipal];
+  }, shallowEqual);
 
-    return content;
-  }
+  useEffect(() => {
+    console.log("< Profile >");
 
-  // content += pricipal.address.address1 + <br />;
-  // content += pricipal.address.address2 + <br />;
-  // content += pricipal.address.city + <br />;
-  // content += pricipal.address.state + <br />;
-  // content += pricipal.address.country + <br />;
-  // content += pricipal.address.zipCode + <br />;
+    // if (isAuthenticated) {
+    doProfile();
+    // }
+  }, []);
 
   return (
     <div className="bg-white overflow-hidden shadow rounded-lg border m-8 ">
@@ -33,32 +29,39 @@ export default function Profile({ pricipal }: ProfileProps) {
         <dl className="sm:divide-y sm:divide-gray-200">
           <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Full name</dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              {pricipal?.firstName} {pricipal?.lastName} ( {pricipal?.role} )
+            <dd className="mt-1 text-lg text-blue-900 sm:mt-0 sm:col-span-2">
+              {pricipal?.firstName} {pricipal?.lastName}
             </dd>
           </div>
           <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Email address</dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <dd className="mt-1 text-lg text-gray-900 sm:mt-0 sm:col-span-2">
               {pricipal?.email}
             </dd>
           </div>
           <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Phone number</dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <dd className="mt-1 text-lg text-gray-900 sm:mt-0 sm:col-span-2">
               {pricipal?.phoneNumber}
             </dd>
           </div>
           <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Address</dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <dd className="mt-1 text-lg text-gray-900 sm:mt-0 sm:col-span-2">
               {pricipal?.address?.address1}
-              <br/>
+              <br />
               {pricipal?.address?.address2}
-              <br/>
+              <br />
               {pricipal?.address?.city}, {pricipal?.address?.state}
-              <br/>
+              <br />
               {pricipal?.address?.country} {pricipal?.address?.zipCode}
+            </dd>
+          </div>
+
+          <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt className="text-sm font-medium text-gray-500">Role</dt>
+            <dd className="mt-1 text-lg text-gray-900 sm:mt-0 sm:col-span-2">
+              {pricipal?.role}
             </dd>
           </div>
         </dl>

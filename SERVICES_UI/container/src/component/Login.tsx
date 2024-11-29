@@ -1,55 +1,49 @@
 import React, { useState } from "react";
-
-import ExternalInterface from "../service/ExternalInterface";
 import { ILogin } from "../model/auth.model";
+import { useThunk } from "../store/hooks";
+import { userLogin, userProfile } from "../store/store";
+import { useNavigate } from "react-router-dom";
+import { unwrapResult } from "@reduxjs/toolkit";
+import BusySpinner from "../control/BusySpinner";
 
 const defaultFormData: ILogin = {
   username: "",
   password: "",
   ui_only_errors: [],
 };
-type LoginProp = {
-  onLogin: (token: string) => void;
-};
 
-export default function Login({ onLogin }: LoginProp) {
+export default function Login() {
+  const navigation = useNavigate();
+
+  const [doLogin, isLoading, error] = useThunk(userLogin);
+
+  const [doProfile] = useThunk(userProfile);
+
   const [formData, setFormData] = useState<ILogin>(defaultFormData);
 
-  const formSubmit = (event: any) => {
+  const formSubmit = async (event: any) => {
     event.preventDefault();
     console.log(formData);
 
     const payload: ILogin = { ...formData };
     payload.password = payload.password.trim();
     payload.username = payload.username.trim();
-    ExternalInterface.userLogin(payload)
-      .then((data) => {
-        console.log("DATA  :: ");
-        console.log(data);
-        onLogin(data?.token);
-      })
-      .catch((error: any) => {
-        console.log("ERROR  :: ");
-        console.log(error);
-        const message = error.response?.data?.message;
-        const errors = error.response?.data?.errors;
-        console.log("----");
-        console.log(errors);
 
-        // if (errors && errors?.length > 0) {
-        setFormData((pre) => {
-          console.log(errors);
-          return { ...pre, ui_only_errors: errors, ui_only_message: message };
-        });
-        // }
-      });
+    const resultAction = await doLogin(payload);
+    try {
+      unwrapResult(resultAction);
+      navigation("/profile");
+      doProfile();
+    } catch (err) {}
   };
+
   const updateValue = (key: string, value: any) => {
-    console.log(`-------------------------------${key} :: ${value}`);
+    // console.log(`-------------------------------${key} :: ${value}`);
     let input: any = { ...formData };
     input[key] = value;
     setFormData(input);
   };
+
   return (
     <div className="font-[sans-serif]">
       <div className="mt-12 flex fle-col items-center justify-center py-6 px-4">
@@ -65,6 +59,11 @@ export default function Login({ onLogin }: LoginProp) {
               onSubmit={formSubmit}
               className="bg-gray-200 p-4 border-r-8 border-4"
             >
+              <BusySpinner
+                isLoading={isLoading}
+                isError={error}
+                className="float-right"
+              />
               <h2 className="text-blue-900 text-3xl font-extrabold mb-8">
                 Login
               </h2>
@@ -112,15 +111,14 @@ export default function Login({ onLogin }: LoginProp) {
               </div>
 
               <div className="m-0 p-0">
-                <p className="text-red-600 m-0 p-0">
-                  {formData.ui_only_message}
-                </p>
-                {formData.ui_only_errors?.map((err, index) => (
+                <p className="text-red-600 m-0 p-0 text-b">{error?.message}</p>
+                {error?.errors?.map((errorLine: any, index: number) => (
                   <p key={index} className="text-red-600 m-0 p-0">
-                    {err}
+                    {errorLine}
                   </p>
                 ))}
               </div>
+
               <div className="!mt-4">
                 <button
                   type="submit"

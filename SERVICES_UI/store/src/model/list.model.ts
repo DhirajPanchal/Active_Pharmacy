@@ -22,6 +22,16 @@ export const DEFAULT_LIST_PAYLOAD: ListPayload = {
   },
 };
 
+export const DEFAULT_GRID_PAYLOAD: ListPayload = {
+  filter: [],
+  sort: { id: "asc" },
+  onlyActive: false,
+  ui_only: {
+    index: 0,
+    size: 50,
+  },
+};
+
 export interface ListResponse<T> {
   content: T[];
   count: number;

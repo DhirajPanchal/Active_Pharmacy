@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { IUser } from "../model/auth.model";
+import { appDispatch, appSelector } from "../store/hooks";
+import { shallowEqual } from "react-redux";
+import { doLogout } from "../store/slice/auth/auth-slice";
 
 type OptionType = { label: string; route: string; action?: string };
 
@@ -31,20 +33,15 @@ const SUPER_AUTH_OPTIONS: OptionType[] = [
   { label: "L O G O U T", route: "/", action: "logout" },
 ];
 
-type NavBarProps = {
-  isAuthenticated: boolean;
-  pricipal?: IUser;
-  onLogout: () => void;
-};
-
-export default function NavBar({
-  isAuthenticated = false,
-  pricipal,
-  onLogout,
-}: NavBarProps) {
+export default function NavBar() {
+  const dispatch = appDispatch();
   const navigation = useNavigate();
   const [openMenu, setOpenMenu] = useState<boolean>(false);
   const [options, setOptions] = useState<OptionType[]>(GUEST_OPTIONS);
+
+  const [isAuthenticated, pricipal] = appSelector((state) => {
+    return [state.auth.isAuthenticated, state.auth.pricipal];
+  }, shallowEqual);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -76,7 +73,8 @@ export default function NavBar({
   const optionHandle = (option: OptionType) => {
     console.log("_optionHandle : " + option.route);
     if (option?.action === "logout") {
-      onLogout();
+      // onLogout();
+      dispatch(doLogout());
     }
     if (option.route && option.route !== "") {
       navigation(option.route);
@@ -85,7 +83,7 @@ export default function NavBar({
   };
 
   return (
-    <nav className=" bg-white w-full flex relative justify-between items-center mx-auto px-8 h-32 border-b-0 border-dashed border-gray-200 ">
+    <nav className="w-full flex relative justify-between items-center mx-auto px-8 h-24 border-b-0 border-dashed border-gray-200 ">
       {/* Logo */}
 
       <div className="inline-flex">
@@ -146,13 +144,12 @@ export default function NavBar({
       <div className="flex-initial">
         <div className="flex justify-end items-center relative">
           <div className="flex mr-4 items-center">
-            {/* {pricipal?.firstName} */}
+            {isAuthenticated} - {pricipal?.firstName}
             {/* <a
               className="inline-block py-2 px-3 hover:bg-gray-200 rounded-full"
             >
               LINK
             </a> */}
-            {/* <b> {isAuthenticated} </b> */}
           </div>
 
           <div className="block w-32 ">

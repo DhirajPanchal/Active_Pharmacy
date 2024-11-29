@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-import ExternalInterface from "../service/ExternalInterface";
 import { useNavigate } from "react-router-dom";
 import { IRegistration } from "../model/auth.model";
+import { useThunk } from "../store/hooks";
+import { userRegistration } from "../store/store";
+import { unwrapResult } from "@reduxjs/toolkit";
+import BusySpinner from "../control/BusySpinner";
 
 const defaultFormData: IRegistration = {
   email: "",
@@ -13,47 +16,32 @@ const defaultFormData: IRegistration = {
 };
 
 export default function Registration() {
-  const [formData, setFormData] = useState<IRegistration>(defaultFormData);
 
   const navigation = useNavigate();
 
-  const formSubmit = (event: any) => {
+  const [doRegistration, isLoading, error] = useThunk(userRegistration);
+
+  const [formData, setFormData] = useState<IRegistration>(defaultFormData);
+
+  const formSubmit = async (event: any) => {
     event.preventDefault();
     console.log(formData);
-    // if (formData?.password !== formData?.matchingPassword) {
-    //   return;
-    // }
-
     const payload: IRegistration = { ...formData };
     payload.firstName = payload.firstName.trim();
     payload.lastName = payload.lastName.trim();
     payload.password = payload.password.trim();
     payload.matchingPassword = payload.matchingPassword.trim();
-    ExternalInterface.userRegistration(payload)
-      .then((data) => {
-        console.log("DATA  :: ");
-        console.log(data);
-        navigation("/login");
-      })
-      .catch((error: any) => {
-        console.log("ERROR  :: ");
-        console.log(error);
-        const message = error.response?.data?.message;
-        const errors = error.response?.data?.errors;
-        console.log("----");
-        console.log(errors);
 
-        // if (errors && errors?.length > 0) {
-        setFormData((pre) => {
-          console.log(errors);
-          return { ...pre, ui_only_errors: errors, ui_only_message: message };
-        });
-        // }
-      });
+    //doRegistration(payload);
+    const resultAction = await doRegistration(payload);
+    try {
+      unwrapResult(resultAction);
+      navigation("/login");
+    } catch (err) {}
   };
 
   const updateValue = (key: string, value: any) => {
-    console.log(`-------------------------------${key} :: ${value}`);
+    // console.log(`-------------------------------${key} :: ${value}`);
     let input: any = { ...formData };
     input[key] = value;
     if (
@@ -71,8 +59,6 @@ export default function Registration() {
     setFormData(input);
   };
 
-  console.log(" FORM :: ", formData.ui_only_message);
-
   return (
     <div className="font-[sans-serif]">
       <div className="mt-12 flex fle-col items-center justify-center py-6 px-4">
@@ -87,9 +73,15 @@ export default function Registration() {
             onSubmit={formSubmit}
             className="max-w-md md:ml-auto w-full bg-gray-200 p-4 border-r-8 "
           >
+            <BusySpinner
+              isLoading={isLoading}
+              isError={error}
+              className="float-right"
+            />
             <h2 className="text-blue-900 text-3xl font-extrabold mb-8">
               Registration
             </h2>
+
             <div className="space-y-4">
               <div>
                 <input
@@ -149,12 +141,10 @@ export default function Registration() {
                 />
               </div>
               <div className="m-0 p-0">
-                <p className="text-red-600 m-0 p-0">
-                  {formData.ui_only_message}
-                </p>
-                {formData.ui_only_errors?.map((err, index) => (
+                <p className="text-red-600 m-0 p-0 text-b">{error?.message}</p>
+                {error?.errors?.map((errorLine: any, index: number) => (
                   <p key={index} className="text-red-600 m-0 p-0">
-                    {err}
+                    {errorLine}
                   </p>
                 ))}
               </div>
@@ -163,7 +153,8 @@ export default function Registration() {
             <div className="!mt-4">
               <button
                 type="submit"
-                className="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded text-white bg-blue-900 hover:bg-blue-600 focus:outline-none"
+                disabled={isLoading}
+                className="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded text-white bg-blue-900 hover:bg-blue-600 focus:outline-none disabled:bg-gray-500"
               >
                 Register
               </button>

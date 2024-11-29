@@ -126,3 +126,8 @@ th {
   padding: 16px;
 }
 
+.active {
+  background: white;
+  border-radius: 9999px;
+  color: #073455;
+}
