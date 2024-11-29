@@ -131,3 +131,11 @@ th {
   border-radius: 9999px;
   color: #073455;
 }
+
+.entity-table-wrapper {
+  flex-grow: 1;
+  height: 720px;
+  overflow: auto;
+  scrollbar-color: #006064 rgb(240, 240, 240);
+  scrollbar-width: thin;
+}

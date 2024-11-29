@@ -83,7 +83,7 @@ export default function NavBar() {
   };
 
   return (
-    <nav className="w-full flex relative justify-between items-center mx-auto px-8 h-24 border-b-0 border-dashed border-gray-200 ">
+    <nav className="w-full flex relative justify-between items-center mx-auto px-12 h-24 border-b-0 border-dashed border-gray-200 ">
       {/* Logo */}
 
       <div className="inline-flex">

@@ -73,18 +73,16 @@ export default function DrugList() {
   return (
     //className="w-fit p-2"  bg-yellow-200 border-4 border-blue-600
     <div className=" flex flex-col w-full mx-2 px-2">
-      <div className="flex justify-end m-2 pr-2">
+      <div className="flex justify-end m-2 pr-6">
         <ViewToggle viewChange={(view) => handleViewChange(view)} />
       </div>
 
-      <div className="p-2">
+      <div className="px-8 pt-2">
         {isGrid && (
-
-            <GridView
-              content={listResponse?.content}
-              triggerRefresh={(payload) => loadDrugs(payload)}
-            />
- 
+          <GridView
+            content={listResponse?.content}
+            triggerRefresh={(payload) => loadDrugs(payload)}
+          />
         )}
 
         {!isGrid && (

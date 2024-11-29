@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { DEFAULT_GRID_PAYLOAD, DEFAULT_LIST_PAYLOAD, ListPayload } from "../../model/list.model";
+import {
+  DEFAULT_GRID_PAYLOAD,
+  DEFAULT_LIST_PAYLOAD,
+  ListPayload,
+} from "../../model/list.model";
 
 type GridViewProps = {
   content: any[];
@@ -31,7 +35,7 @@ export default function GridView({ content, triggerRefresh }: GridViewProps) {
   };
 
   return (
-    <div className=" mx-auto lg:p-4 sm:p-2">
+    <div className="entity-table-wrapper mx-auto lg:p-4 sm:p-2">
       <div className="sm:grid lg:grid-cols-5 sm:grid-cols-2 gap-8">
         {/* C A R D  START */}
 

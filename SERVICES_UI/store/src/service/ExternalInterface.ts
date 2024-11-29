@@ -1,12 +1,11 @@
-//ExternalInterface
-import axios, { AxiosError, AxiosResponse } from "axios";
+// STORE App
+import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import {
   DEFAULT_LIST_PAYLOAD,
   ListItem,
   ListPayload,
   ListResponse,
 } from "../model/list.model";
-import { toast } from "react-toastify";
 import { Drug } from "../model/Drug";
 
 const GATEWAY = "http://localhost:8010";
@@ -15,20 +14,22 @@ const STORE_SERVICE_ROUTE = "active-pharmacy/store";
 
 const API_VERSION = "api/v1";
 
-axios.defaults.baseURL = `${GATEWAY}/${STORE_SERVICE_ROUTE}/${API_VERSION}/`;
+var storePublicApi: AxiosInstance = axios.create({
+  baseURL: `${GATEWAY}/${STORE_SERVICE_ROUTE}/${API_VERSION}/`,
+  headers: { "Content-Type": "application/json" },
+});
 
-axios.interceptors.request.use(
+var storeProtectedApi: AxiosInstance = axios.create({
+  baseURL: `${GATEWAY}/${STORE_SERVICE_ROUTE}/${API_VERSION}/`,
+  headers: { "Content-Type": "application/json" },
+});
+
+storeProtectedApi.interceptors.request.use(
   (config) => {
-    console.log(
-      "[OUTBOUND] __API (STORE) " + config.method + " : " + config.url
-    );
-
-    config.headers["Content-Type"] = "application/json";
-    if (config.url !== "/auth/login" && config.url != "/auth/registration") {
-      const token = sessionStorage.getItem("TOKEN");
-      if (token) {
-        config.headers["Authorization"] = `Bearer ${token}`;
-      }
+    console.log("[OUTBOUND] API (S) " + config.method + " : " + config.url);
+    const token = sessionStorage.getItem("TOKEN");
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
   },
@@ -40,7 +41,6 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   async (response) => {
     responseAnalysis(response);
-
     // // console.log("[INBOUND] __API (INV) RESPONSE", response.data);
     // // console.log(response);
     //toast.success("Success");
@@ -52,24 +52,7 @@ axios.interceptors.response.use(
       "[INBOUND] __API (INV) ERROR :: " + status + " :: " + statusText
     );
     console.error(error.response);
-    toast.error(`ERROR ${status} : ${statusText}`);
-    // switch (status) {
-    //   case 400:
-    //     console.warn("__API (INV) ERROR - 400 ");
-    //     break;
-    //   case 401:
-    //     console.warn("__API (INV) ERROR - 401 Unauthorized ");
-    //     break;
-    //   case 404:
-    //     console.warn("__API (INV) ERROR - 404");
-    //     break;
-    //   case 500:
-    //     console.warn("__API (INV) ERROR - 500 Server Error");
-    //     break;
-    //   default:
-    //     console.warn("__API (INV) ERROR - Unknown");
-    //     break;
-    // }
+    // toast.error(`ERROR ${status} : ${statusText}`);
     return Promise.reject(error);
   }
 );
@@ -105,26 +88,36 @@ function responseAnalysis(response: AxiosResponse<any, any>) {
 }
 
 const request = {
-  get: <T>(url: string, objective?: string) =>
-    axios.get<T>(url).then(responseBody),
-  put: <T>(url: string, body: any, objective?: string) =>
-    axios
+  get: <T>(instance: AxiosInstance, url: string, objective?: string) =>
+    instance.get<T>(url).then(responseBody),
+  put: <T>(
+    instance: AxiosInstance,
+    url: string,
+    body: any,
+    objective?: string
+  ) =>
+    instance
       .put<T>(url, body, {
         headers: {
           OBJECTIVE_TAG: objective,
         },
       })
       .then(responseBody),
-  delete: <T>(url: string, objective?: string) =>
-    axios
+  delete: <T>(instance: AxiosInstance, url: string, objective?: string) =>
+    instance
       .delete<T>(url, {
         headers: {
           OBJECTIVE_TAG: objective,
         },
       })
       .then(responseBody),
-  post: <T>(url: string, body: any, objective?: string) =>
-    axios
+  post: <T>(
+    instance: AxiosInstance,
+    url: string,
+    body: any,
+    objective?: string
+  ) =>
+    instance
       .post<T>(url, body, {
         headers: {
           OBJECTIVE_TAG: objective,
@@ -137,13 +130,17 @@ const request = {
 
 const loadDrugList = (payload: ListPayload = DEFAULT_LIST_PAYLOAD) => {
   return request.post<ListResponse<Drug>>(
+    storeProtectedApi,
     `list/drug?index=${payload.ui_only.index}&size=${payload.ui_only.size}`,
     payload
   );
 };
 
 const loadProvider = (type: string, search: string = "") => {
-  return request.get<ListItem>(`list/provider?type=${type}&search=${search}`);
+  return request.get<ListItem>(
+    storeProtectedApi,
+    `list/provider?type=${type}&search=${search}`
+  );
 };
 
 const ExternalInterface = {
