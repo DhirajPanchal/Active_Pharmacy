@@ -12,7 +12,7 @@ import { Provider } from "react-redux";
 import { appStore } from "./store/store";
 
 const StoreRemoteApp = React.lazy(() => import("store/StoreApp"));
-// const InventoryRemoteApp = React.lazy(() => import("inventory/InventoryApp"));
+const InventoryRemoteApp = React.lazy(() => import("inventory/InventoryApp"));
 
 function App() {
   const [isAuthenticated, setAuthenticated] = useState<boolean>(false);
@@ -32,14 +32,14 @@ function App() {
               path="/"
               element={<Login />}
             />
-            <Route path="/profile" element={<Profile pricipal={pricipal} />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/registration" element={<Registration />} />
             <Route
               path="/login"
               element={<Login  />}
             />
             <Route path="/store/*" element={<StoreRemoteApp />} />
-            {/* <Route path="/inventory/*" element={<InventoryRemoteApp />} /> */}
+            <Route path="/inventory/*" element={<InventoryRemoteApp />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

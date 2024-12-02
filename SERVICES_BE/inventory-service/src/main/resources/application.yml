@@ -28,6 +28,8 @@ spring:
     admin:
       client:
         url: http://localhost:8021
+        username: admin
+        password: admin
   datasource:
     url: "jdbc:mysql://localhost:3306/active_pharmacy_v01"
     username: root

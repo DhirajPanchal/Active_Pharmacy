@@ -23,6 +23,8 @@ spring:
     admin:
       client:
         url: http://localhost:8021
+        username: admin
+        password: admin
 
 eureka:
   instance:
