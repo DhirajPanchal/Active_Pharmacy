@@ -12,9 +12,22 @@ info:
     description: "Active Pharmacy - Store Service"
     version: "1.0.0"
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
 spring:
   application:
     name: store-service
+  boot:
+    admin:
+      client:
+        url: http://localhost:8021
   r2dbc:
     url: "r2dbc:mysql://localhost:3306/active_pharmacy_v01"
     username: root

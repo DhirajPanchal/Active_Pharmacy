@@ -6,9 +6,23 @@
 server:
   port: 8020
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+
 spring:
   application:
     name: eureka-server
+  boot:
+    admin:
+      client:
+        url: http://localhost:8021
 
 eureka:
   instance:

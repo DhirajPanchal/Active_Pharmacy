@@ -1,0 +1,26 @@
+#
+#
+#   A D M I N - S E R V E R
+#
+#
+server:
+  port: 8021
+
+info:
+  app:
+    name: "admin-server"
+    description: "Active Pharmacy - admin-server"
+    version: "1.0.0"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+spring:
+  application:
+    name: admin-server

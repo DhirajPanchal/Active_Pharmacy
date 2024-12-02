@@ -12,6 +12,15 @@ info:
     description: "Active Pharmacy - Gateway Server"
     version: "1.0.0"
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
 spring:
   application:
     name: gateway-server
