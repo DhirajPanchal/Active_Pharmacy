@@ -137,7 +137,7 @@ export default function Login() {
                 </p>
               </div>
             </form>
-            <div className="flex justify-evenly border-4 border-dashed border-gray-200 hover:bg-blue-100 mt-4">
+            {/* <div className="flex justify-evenly border-4 border-dashed border-gray-200 hover:bg-blue-100 mt-4">
               <p className="mt-8 text-sp text-gray-400">
                 <a className=" font-semibold hover:underline ml-1">
                   BUSINESS USER LOGIN
@@ -149,7 +149,7 @@ export default function Login() {
                 alt="Logo"
                 className="keycload-image"
               />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

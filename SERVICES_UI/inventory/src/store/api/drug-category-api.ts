@@ -5,6 +5,14 @@ const drugCategoryApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl:
       "http://localhost:8010/active-pharmacy/inventory/api/v1/drug-category",
+
+    prepareHeaders: (headers) => {
+      const token = sessionStorage.getItem("TOKEN");
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   endpoints(builder) {
     return {

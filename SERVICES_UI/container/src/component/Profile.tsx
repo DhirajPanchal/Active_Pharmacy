@@ -11,11 +11,8 @@ export default function Profile() {
   }, shallowEqual);
 
   useEffect(() => {
-    console.log("< Profile >");
-
-    // if (isAuthenticated) {
+    console.log("< Profile > useEffect");
     doProfile();
-    // }
   }, []);
 
   return (

@@ -1,47 +1,57 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { appDispatch, appSelector } from "../store/hooks";
+import { appDispatch, appSelector, useThunk } from "../store/hooks";
 import { shallowEqual } from "react-redux";
 import { doLogout } from "../store/slice/auth/auth-slice";
+import { userProfile } from "../store/store";
 
 type OptionType = { label: string; route: string; action?: string };
 
 const GUEST_OPTIONS: OptionType[] = [
-  { label: "L O G I N", route: "/login" },
-  { label: "R E G I S T R A T I O N", route: "/registration" },
   { label: "S T O R E", route: "/store" },
   { label: "P R O F I L E", route: "/profile" },
+  { label: "R E G I S T R A T I O N", route: "/registration" },
+  { label: "L O G I N", route: "/login" },
 ];
 
 const USER_AUTH_OPTIONS: OptionType[] = [
-  { label: "P R O F I L E", route: "/profile" },
   { label: "S T O R E", route: "/store" },
+  { label: "P R O F I L E", route: "/profile" },
   { label: "L O G O U T", route: "/", action: "logout" },
 ];
 
 const OPERATION_AUTH_OPTIONS: OptionType[] = [
-  { label: "P R O F I L E", route: "/profile" },
   { label: "I N V E N T O R Y", route: "/inventory" },
+  { label: "P R O F I L E", route: "/profile" },
   { label: "L O G O U T", route: "/", action: "logout" },
 ];
 
 const SUPER_AUTH_OPTIONS: OptionType[] = [
-  { label: "P R O F I L E", route: "/profile" },
   { label: "S T O R E", route: "/store" },
   { label: "I N V E N T O R Y", route: "/inventory" },
+  { label: "P R O F I L E", route: "/profile" },
   { label: "L O G O U T", route: "/", action: "logout" },
 ];
 
 export default function NavBar() {
   const dispatch = appDispatch();
   const navigation = useNavigate();
+  const [doProfile, isLoading, error] = useThunk(userProfile);
   const [openMenu, setOpenMenu] = useState<boolean>(false);
   const [options, setOptions] = useState<OptionType[]>(GUEST_OPTIONS);
 
   const [isAuthenticated, pricipal] = appSelector((state) => {
     return [state.auth.isAuthenticated, state.auth.pricipal];
   }, shallowEqual);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("TOKEN");
+    // console.log("< NavBar > useEffect");
+    if (token) {
+      doProfile();
+    }
+  }, []);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -83,7 +93,11 @@ export default function NavBar() {
   };
 
   return (
-    <nav className="w-full flex relative justify-between items-center mx-auto px-12 h-24 border-b-0 border-dashed border-gray-200 ">
+    <nav
+      className="w-full flex relative justify-between items-center mx-auto px-12 h-24 
+      border-b-0 border-dashed border-gray-200
+      bg-gradient-to-r from-white from-20% via-green-50 to-blue-200
+      ">
       {/* Logo */}
 
       <div className="inline-flex">
@@ -107,16 +121,16 @@ export default function NavBar() {
 
       <div className="hidden sm:block flex-shrink flex-grow-0 justify-start px-2 w-1/3">
         <div className="inline-block w-full ">
-          <div className="inline-flex items-center w-full max-w-full  ">
+          <div className="inline-flex items-center w-full max-w-full">
             <button
-              className="flex items-center flex-grow-0 flex-shrink pl-2 relative w-full border-2 rounded-full px-1  py-1"
+              className="flex items-center flex-grow-0 flex-shrink pl-2 relative w-full border-4 rounded-full px-1  py-1 bg-transparent"
               type="button"
               onClick={handleSearch}
             >
               <input
                 type="text"
                 placeholder=" drug search"
-                className="border-none w-full h-fit align-middle text-center"
+                className="border-none w-full h-fit align-middle text-center bg-transparent text-black"
               />
               <div className="flex items-center justify-center relative  h-8 w-8 rounded-full">
                 <svg
@@ -144,7 +158,7 @@ export default function NavBar() {
       <div className="flex-initial">
         <div className="flex justify-end items-center relative">
           <div className="flex mr-4 items-center">
-            {isAuthenticated} - {pricipal?.firstName}
+            {/* {isAuthenticated} - {pricipal?.firstName} */}
             {/* <a
               className="inline-block py-2 px-3 hover:bg-gray-200 rounded-full"
             >
